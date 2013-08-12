@@ -18,13 +18,16 @@
 package org.quantumbadger.redreader.ui.list;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.view.MotionEvent;
-import android.view.View;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import org.quantumbadger.redreader.ui.RRFragmentContext;
 
 import java.util.LinkedList;
 
-public final class RRListView extends View {
+public final class RRListView extends SurfaceView implements SurfaceHolder.Callback {
 
 	private final RRListViewContents contents = new RRListViewContents(this);
 	private volatile RRListViewContents.RRListViewFlattenedContents flattenedContents;
@@ -34,17 +37,24 @@ public final class RRListView extends View {
 	private volatile int width, height;
 
 	private int firstVisibleItemPos = 0, lastVisibleItemPos = -1;
-	//private float positionInFirstVisibleItem = 0;
 	private int pxInFirstVisibleItem = 0;
 
 	private int oldWidth = -1;
 
-	private volatile RenderThread thread;
+	private volatile SurfaceThread surfaceThread;
+	private volatile RenderThread renderThread;
 	private volatile boolean isPaused = true;
+
+	private final RRFragmentContext context;
+
+	private final Paint backgroundPaint = new Paint();
 
 	public RRListView(RRFragmentContext context) {
 		super(context.activity);
+		this.context = context;
 		setWillNotDraw(false);
+		getHolder().addCallback(this);
+		backgroundPaint.setColor(Color.BLUE);
 	}
 
 	public void onChildAppended() {
@@ -122,7 +132,7 @@ public final class RRListView extends View {
 
 		this.lastVisibleItemPos = lastVisibleItemPos;
 
-		cacheManager.update(fc, firstVisibleItemPos, lastVisibleItemPos, 10, thread);
+		cacheManager.update(fc, firstVisibleItemPos, lastVisibleItemPos, 10, renderThread);
 	}
 
 	private int downId = -1;
@@ -157,7 +167,7 @@ public final class RRListView extends View {
 			lastYPos = Math.round(ev.getY());
 
 			scrollBy(-yDelta);
-			invalidate();
+			//invalidate();
 
 			return true;
 
@@ -166,19 +176,20 @@ public final class RRListView extends View {
 
 	public void resume() {
 		isPaused = false;
-		thread = new RenderThread(); // TODO this is unsafe - two threads may run at once
-		thread.start();
+		renderThread = new RenderThread(); // TODO this is unsafe - two threads may run at once
+		renderThread.start();
 	}
 
 	public void pause() {
 		isPaused = true;
-		thread.interrupt();
+		renderThread.interrupt();
 	}
 
-	@Override
-	protected void onDraw(Canvas canvas) {
+	private void doDraw(final Canvas canvas) {
 
 		if(flattenedContents == null) return;
+
+		canvas.drawRect(0, 0, width, height, backgroundPaint);
 
 		final RRListViewContents.RRListViewFlattenedContents fc = flattenedContents;
 
@@ -187,6 +198,26 @@ public final class RRListView extends View {
 		for(int i = firstVisibleItemPos; i <= lastVisibleItemPos; i++) {
 			fc.items[i].draw(canvas, width);
 			canvas.translate(0, fc.items[i].height);
+		}
+	}
+
+	public void surfaceCreated(SurfaceHolder holder) {
+		surfaceThread = new SurfaceThread();
+		surfaceThread.start();
+	}
+
+	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+		surfaceThread.surfaceHolder = holder;
+	}
+
+	public void surfaceDestroyed(SurfaceHolder holder) {
+
+		surfaceThread.running = false;
+
+		try {
+			surfaceThread.join();
+		} catch(InterruptedException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -218,6 +249,29 @@ public final class RRListView extends View {
 					if(!toRender.isEmpty()) {
 						toRender.removeFirst().doCacheRender(width, false);
 					}
+				}
+			}
+		}
+	}
+
+	protected final class SurfaceThread extends Thread {
+
+		public volatile boolean running = true;
+		SurfaceHolder surfaceHolder;
+
+		public SurfaceThread() {
+			surfaceHolder = getHolder();
+		}
+
+		@Override
+		public void run() {
+
+			while(running) {
+
+				final Canvas canvas = surfaceHolder.lockCanvas();
+				if(canvas != null) {
+					doDraw(canvas);
+					surfaceHolder.unlockCanvasAndPost(canvas);
 				}
 			}
 		}
