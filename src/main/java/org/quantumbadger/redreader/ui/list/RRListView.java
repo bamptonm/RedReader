@@ -19,6 +19,7 @@ package org.quantumbadger.redreader.ui.list;
 
 import android.graphics.Canvas;
 import android.os.SystemClock;
+import android.widget.EdgeEffect;
 import org.quantumbadger.redreader.common.RRSchedulerManager;
 import org.quantumbadger.redreader.common.UnexpectedInternalStateException;
 import org.quantumbadger.redreader.ui.frag.RRFragmentContext;
@@ -52,11 +53,13 @@ public final class RRListView extends RRSingleTouchViewWrapper implements RRView
 	};
 
 	private float velocity = 0;
-
 	private static final float minVelocity = 1;
+
+	private final EdgeEffect topEdgeEffect;
 
 	public RRListView(RRFragmentContext context) {
 		super(context);
+		topEdgeEffect = new EdgeEffect(context.activity);
 		cacheEnableTimer = context.scheduler.obtain();
 		setWillNotDraw(false);
 	}
@@ -77,7 +80,7 @@ public final class RRListView extends RRSingleTouchViewWrapper implements RRView
 		flattenedContents = contents.getFlattenedContents();
 		if(flattenedContents.itemCount - 2 == lastVisibleItemPos) {
 			brieflyDisableCache();
-			recalculateLastVisibleItem();
+			recalculateLastVisibleItem(false);
 			postInvalidate();
 			// TODO account for new cache manager
 		}
@@ -92,7 +95,7 @@ public final class RRListView extends RRSingleTouchViewWrapper implements RRView
 		// TODO invalidate cache. If previous top child is now invisible, go to the next one visible one after it in the list
 		brieflyDisableCache();
 		flattenedContents = contents.getFlattenedContents();
-		recalculateLastVisibleItem();
+		recalculateLastVisibleItem(false);
 		postInvalidate();
 	}
 
@@ -141,20 +144,21 @@ public final class RRListView extends RRSingleTouchViewWrapper implements RRView
 		width = MeasureSpec.getSize(widthMeasureSpec);
 		height = MeasureSpec.getSize(heightMeasureSpec);
 		setMeasuredDimension(width, height);
+		topEdgeEffect.setSize(width, height);
 		isMeasured = true;
 
-		recalculateLastVisibleItem();
+		recalculateLastVisibleItem(false);
 
 		clearCacheRing();
 	}
 
-	public synchronized void scrollBy(float px) {
-		pxInFirstVisibleItem += px;
-		pxInFirstCacheBlock += px;
-		recalculateLastVisibleItem();
+	public synchronized void scrollBy(float px, boolean userMotion) {
+		pxInFirstVisibleItem += (int)px;
+		pxInFirstCacheBlock += (int)px;
+		recalculateLastVisibleItem(userMotion);
 	}
 
-	public synchronized void recalculateLastVisibleItem() {
+	public synchronized void recalculateLastVisibleItem(boolean userMotion) {
 
 		if(!isMeasured) return;
 
@@ -164,6 +168,18 @@ public final class RRListView extends RRSingleTouchViewWrapper implements RRView
 
 		while(pxInFirstVisibleItem < 0 && firstVisibleItemPos > 0) {
 			pxInFirstVisibleItem += items[--firstVisibleItemPos].setWidth(width);
+		}
+
+		if(pxInFirstVisibleItem < 0) {
+			if(userMotion) {
+				topEdgeEffect.onPull(pxInFirstVisibleItem / height);
+			} else {
+				topEdgeEffect.onAbsorb((int)Math.abs(velocity));
+				velocity = 0;
+			}
+
+			pxInFirstCacheBlock -= pxInFirstVisibleItem;
+			pxInFirstVisibleItem = 0;
 		}
 
 		while(pxInFirstVisibleItem >= items[firstVisibleItemPos].setWidth(width)
@@ -220,7 +236,7 @@ public final class RRListView extends RRSingleTouchViewWrapper implements RRView
 
 			uptimeMillis = SystemClock.uptimeMillis();
 
-			scrollBy(velocity / 60f); // TODO detect time elapsed since last draw
+			scrollBy(velocity / 60f, false); // TODO detect time elapsed since last draw
 			velocity *= 0.975;
 			velocity += 0.05 * (velocity > 0 ? -1 : 1); // TODO take into account dpi
 			invalidate = true;
@@ -255,6 +271,8 @@ public final class RRListView extends RRSingleTouchViewWrapper implements RRView
 		} else {
 			if(!cacheRing.draw(canvas, height, -pxInFirstCacheBlock)) invalidate = true;
 		}
+
+		if(topEdgeEffect.draw(canvas)) invalidate = true;
 
 		if(brieflyDisableCache) brieflyDisableCache();
 		else if(invalidate) invalidate();
@@ -315,12 +333,13 @@ public final class RRListView extends RRSingleTouchViewWrapper implements RRView
 	}
 
 	public void onVSwipeDelta(long timestamp, float dy) {
-		scrollBy(-dy);
+		scrollBy(-dy, true);
 		invalidate();
 	}
 
 	public void onVSwipeEnd(long timestamp, float yVelocity) {
 		velocity = -yVelocity;
+		topEdgeEffect.onRelease();
 		invalidate();
 	}
 
