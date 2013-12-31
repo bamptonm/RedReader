@@ -27,7 +27,7 @@ import java.util.Hashtable;
 public final class RedditThing {
 
 	public static enum Kind {
-		POST, USER, COMMENT, MESSAGE, SUBREDDIT, MORE_COMMENTS, LISTING
+		POST, USER, COMMENT, MESSAGE, SUBREDDIT, MORE_COMMENTS, LISTING, MULTIREDDIT
 	}
 	
 	private static final Hashtable<String, Kind> kinds;
@@ -41,6 +41,7 @@ public final class RedditThing {
 		kinds.put("t5", Kind.SUBREDDIT);
 		kinds.put("more", Kind.MORE_COMMENTS);
 		kinds.put("Listing", Kind.LISTING);
+		kinds.put("LabeledMulti", Kind.MULTIREDDIT);
 	}
 	
 	public String kind;

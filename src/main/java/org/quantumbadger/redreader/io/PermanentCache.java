@@ -3,19 +3,18 @@ package org.quantumbadger.redreader.io;
 import org.quantumbadger.redreader.common.TimestampBound;
 import org.quantumbadger.redreader.common.collections.WeakReferenceListManager;
 
-import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public final class WeakCache<K, V extends WritableObject<K>, F> implements CacheDataSource<K, V, F> {
+public final class PermanentCache<K, V extends WritableObject<K>, F> implements CacheDataSource<K, V, F> {
 
 	private final HashMap<K, CacheEntry> cached = new HashMap<K, CacheEntry>();
 	private final CacheDataSource<K, V, F> cacheDataSource;
 
 	private final UpdatedVersionListenerNotifier<K, V> updatedVersionListenerNotifier = new UpdatedVersionListenerNotifier<K, V>();
 
-	public WeakCache(CacheDataSource<K, V, F> cacheDataSource) {
+	public PermanentCache(CacheDataSource<K, V, F> cacheDataSource) {
 		this.cacheDataSource = cacheDataSource;
 	}
 
@@ -35,8 +34,8 @@ public final class WeakCache<K, V extends WritableObject<K>, F> implements Cache
 			final CacheEntry entry = cached.get(key);
 			if(entry != null) {
 
-				final V value = entry.data.get();
-				if(value != null && timestampBound.verifyTimestamp(value.getTimestamp())) {
+				final V value = entry.data;
+				if(timestampBound.verifyTimestamp(value.getTimestamp())) {
 					keysRemaining.remove(key);
 					cacheResult.put(key, value);
 					oldestTimestamp = Math.min(oldestTimestamp, value.getTimestamp());
@@ -78,8 +77,8 @@ public final class WeakCache<K, V extends WritableObject<K>, F> implements Cache
 		if(timestampBound != null) {
 			final CacheEntry existingEntry = cached.get(key);
 			if(existingEntry != null) {
-				final V existing = existingEntry.data.get();
-				if(existing != null && timestampBound.verifyTimestamp(existing.getTimestamp())) {
+				final V existing = existingEntry.data;
+				if(timestampBound.verifyTimestamp(existing.getTimestamp())) {
 					handler.onRequestSuccess(existing, existing.getTimestamp());
 					return;
 				}
@@ -93,7 +92,7 @@ public final class WeakCache<K, V extends WritableObject<K>, F> implements Cache
 			}
 
 			public void onRequestSuccess(V result, long timeCached) {
-				synchronized(WeakCache.this) {
+				synchronized(PermanentCache.this) {
 					put(result, false);
 					if(updatedVersionListener != null) cached.get(key).listeners.add(updatedVersionListener);
 					handler.onRequestSuccess(result, timeCached);
@@ -117,10 +116,10 @@ public final class WeakCache<K, V extends WritableObject<K>, F> implements Cache
 		final CacheEntry oldEntry = cached.get(value.getKey());
 
 		if(oldEntry != null) {
-			cached.put(value.getKey(), new CacheEntry(new WeakReference<V>(value), oldEntry.listeners));
+			cached.put(value.getKey(), new CacheEntry(value, oldEntry.listeners));
 			oldEntry.listeners.map(updatedVersionListenerNotifier, value);
 		} else {
-			cached.put(value.getKey(), new CacheEntry(new WeakReference<V>(value)));
+			cached.put(value.getKey(), new CacheEntry(value));
 		}
 
 		if(writeDown) cacheDataSource.performWrite(value);
@@ -132,10 +131,10 @@ public final class WeakCache<K, V extends WritableObject<K>, F> implements Cache
 			final CacheEntry oldEntry = cached.get(value.getKey());
 
 			if(oldEntry != null) {
-				cached.put(value.getKey(), new CacheEntry(new WeakReference<V>(value), oldEntry.listeners));
+				cached.put(value.getKey(), new CacheEntry(value, oldEntry.listeners));
 				oldEntry.listeners.map(updatedVersionListenerNotifier, value);
 			} else {
-				cached.put(value.getKey(), new CacheEntry(new WeakReference<V>(value)));
+				cached.put(value.getKey(), new CacheEntry(value));
 			}
 		}
 
@@ -143,18 +142,16 @@ public final class WeakCache<K, V extends WritableObject<K>, F> implements Cache
 	}
 
 	private final class CacheEntry {
-		public final WeakReference<V> data;
+		public final V data;
 		public final WeakReferenceListManager<UpdatedVersionListener<K, V>> listeners;
 
-		private CacheEntry(WeakReference<V> data,
-						   WeakReferenceListManager<UpdatedVersionListener<K, V>> listeners) {
+		private CacheEntry(V data, WeakReferenceListManager<UpdatedVersionListener<K, V>> listeners) {
 			this.data = data;
 			this.listeners = listeners;
 		}
 
-		private CacheEntry(WeakReference<V> data) {
+		private CacheEntry(V data) {
 			this(data, new WeakReferenceListManager<UpdatedVersionListener<K, V>>());
 		}
 	}
-
 }

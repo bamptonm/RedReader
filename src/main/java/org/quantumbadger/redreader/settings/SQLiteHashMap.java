@@ -46,7 +46,7 @@ public final class SQLiteHashMap {
 	public synchronized void set(final String key, final String value) {
 		contents.put(key, value);
 
-		// TODO use pool
+		// TODO use triggerable thread
 		// TODO low priority
 		new Thread() {
 			@Override

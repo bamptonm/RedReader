@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 
-public class RawObjectDB<E extends WritableObject<String>> extends SQLiteOpenHelper {
+public class RawObjectDB<K, E extends WritableObject<K>> extends SQLiteOpenHelper {
 
 	private final Class<E> clazz;
 	private static final int DB_VERSION = 1;
@@ -105,7 +105,7 @@ public class RawObjectDB<E extends WritableObject<String>> extends SQLiteOpenHel
 
 	@Override
 	public void onUpgrade(final SQLiteDatabase db, final int oldVersion, final int newVersion) {
-		// TODO detect version from static field, delete all data, start again
+		// TODO detect version from static field/WritableObject method, delete all data, start again
 	}
 
 	public synchronized Collection<E> getAll() {
@@ -132,8 +132,8 @@ public class RawObjectDB<E extends WritableObject<String>> extends SQLiteOpenHel
 		} finally { db.close(); }
 	}
 
-	public synchronized E getById(final String id) {
-		final ArrayList<E> queryResult = getByField(FIELD_ID, id);
+	public synchronized E getById(final K id) {
+		final ArrayList<E> queryResult = getByField(FIELD_ID, id.toString());
 		if(queryResult.size() != 1) return null;
 		else return queryResult.get(0);
 	}
@@ -186,6 +186,9 @@ public class RawObjectDB<E extends WritableObject<String>> extends SQLiteOpenHel
 					|| fieldType == Boolean.TYPE) {
 				field.setBoolean(obj, cursor.getInt(i) != 0);
 
+			} else if(fieldType == WritableHashSet.class) {
+				field.set(obj, new WritableHashSet<String>(cursor.getString(i)));
+
 			} else {
 				throw new UnexpectedInternalStateException();
 			}
@@ -228,7 +231,7 @@ public class RawObjectDB<E extends WritableObject<String>> extends SQLiteOpenHel
 
 	private ContentValues toContentValues(final E obj, final ContentValues result) throws IllegalAccessException {
 
-		result.put(FIELD_ID, obj.getKey());
+		result.put(FIELD_ID, obj.getKey().toString());
 
 		for(int i = 0; i < fields.length; i++) {
 
@@ -249,6 +252,9 @@ public class RawObjectDB<E extends WritableObject<String>> extends SQLiteOpenHel
 			} else if(fieldType == Boolean.class
 					|| fieldType == Boolean.TYPE) {
 				result.put(fieldNames[i], field.getBoolean(obj) ? 1 : 0);
+
+			} else if(fieldType == WritableHashSet.class) {
+				result.put(fieldNames[i], field.get(obj).toString());
 
 			} else {
 				throw new UnexpectedInternalStateException();

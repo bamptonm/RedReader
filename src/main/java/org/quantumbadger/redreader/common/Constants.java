@@ -76,6 +76,7 @@ public final class Constants {
 				PATH_UNHIDE = "/api/unhide",
 				PATH_REPORT = "/api/report",
 				PATH_SUBREDDITS_MINE_SUBSCRIBER = "/subreddits/mine/subscriber.json?limit=100",
+				PATH_SUBREDDITS_MINE_MODERATOR = "/subreddits/mine/moderator.json?limit=100",
 				PATH_SUBREDDITS_POPULAR = "/subreddits/popular.json",
 				PATH_COMMENTS = "/comments/";
 
@@ -134,6 +135,7 @@ public final class Constants {
 				CAPTCHA = -600,
 				API_ACTION = -500,
 				API_SUBREDDIT_LIST = -100,
+				API_SUBREDDIT_INVIDIVUAL = -250,
 				API_POST_LIST = -200,
 				API_COMMENT_LIST = -300,
 				THUMBNAIL = 100,
@@ -146,6 +148,7 @@ public final class Constants {
 	public static final class FileType {
 		public static final int NOCACHE = -1,
 				SUBREDDIT_LIST = 100,
+				SUBREDDIT_ABOUT = 101,
 				POST_LIST = 110,
 				COMMENT_LIST = 120,
 				USER_ABOUT = 130,
