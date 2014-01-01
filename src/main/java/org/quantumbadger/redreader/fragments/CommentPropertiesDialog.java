@@ -23,11 +23,11 @@ import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.widget.LinearLayout;
 import org.quantumbadger.redreader.R;
 import org.quantumbadger.redreader.common.RRTime;
-import org.quantumbadger.redreader.reddit.things.RedditComment;
+import org.quantumbadger.redreader.reddit.things.RawRedditComment;
 
 public final class CommentPropertiesDialog extends PropertiesDialog {
 
-	public static CommentPropertiesDialog newInstance(final RedditComment comment) {
+	public static CommentPropertiesDialog newInstance(final RawRedditComment comment) {
 
 		final CommentPropertiesDialog pp = new CommentPropertiesDialog();
 
@@ -46,7 +46,7 @@ public final class CommentPropertiesDialog extends PropertiesDialog {
 	@Override
 	protected void prepare(Activity context, LinearLayout items) {
 
-		final RedditComment comment = getArguments().getParcelable("comment");
+		final RawRedditComment comment = getArguments().getParcelable("comment");
 
 		items.addView(propView(context, R.string.props_author, comment.author, false));
 

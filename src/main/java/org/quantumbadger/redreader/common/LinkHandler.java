@@ -27,8 +27,8 @@ import org.quantumbadger.redreader.activities.ImageViewActivity;
 import org.quantumbadger.redreader.activities.PostListingActivity;
 import org.quantumbadger.redreader.activities.WebViewActivity;
 import org.quantumbadger.redreader.fragments.UserProfileDialog;
-import org.quantumbadger.redreader.reddit.things.RedditPost;
-import org.quantumbadger.redreader.reddit.things.RedditSubreddit;
+import org.quantumbadger.redreader.reddit.things.RawRedditPost;
+import org.quantumbadger.redreader.reddit.things.RawRedditSubreddit;
 
 import java.util.LinkedHashSet;
 import java.util.regex.Matcher;
@@ -49,7 +49,7 @@ public class LinkHandler {
 	}
 
 	public static void onLinkClicked(final Activity activity, final String url,
-									 final boolean forceNoImage, final RedditPost post) {
+									 final boolean forceNoImage, final RawRedditPost post) {
 
 		if(url.startsWith("rr://")) {
 
@@ -104,7 +104,7 @@ public class LinkHandler {
 		if(redditSubredditMatcher.find()) {
 			final String subredditUrl = redditSubredditMatcher.group(1);
 			final Intent intent = new Intent(activity, PostListingActivity.class);
-			intent.putExtra("subreddit", new RedditSubreddit(subredditUrl, subredditUrl, true));
+			intent.putExtra("subreddit", new RawRedditSubreddit(subredditUrl, subredditUrl, true));
 			activity.startActivity(intent);
 			return;
 		}
@@ -114,7 +114,7 @@ public class LinkHandler {
 		if(shortSubredditMatcher.find()) {
 			final String subredditUrl = "/r/" + shortSubredditMatcher.group(1);
 			final Intent intent = new Intent(activity, PostListingActivity.class);
-			intent.putExtra("subreddit", new RedditSubreddit(subredditUrl, subredditUrl, true));
+			intent.putExtra("subreddit", new RawRedditSubreddit(subredditUrl, subredditUrl, true));
 			activity.startActivity(intent);
 			return;
 		}

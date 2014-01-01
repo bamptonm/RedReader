@@ -24,11 +24,11 @@ import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.widget.LinearLayout;
 import org.quantumbadger.redreader.R;
 import org.quantumbadger.redreader.common.RRTime;
-import org.quantumbadger.redreader.reddit.things.RedditPost;
+import org.quantumbadger.redreader.reddit.things.RawRedditPost;
 
 public final class PostPropertiesDialog extends PropertiesDialog {
 
-	public static PostPropertiesDialog newInstance(final RedditPost post) {
+	public static PostPropertiesDialog newInstance(final RawRedditPost post) {
 
 		final PostPropertiesDialog pp = new PostPropertiesDialog();
 
@@ -47,7 +47,7 @@ public final class PostPropertiesDialog extends PropertiesDialog {
 	@Override
 	protected void prepare(Activity context, LinearLayout items) {
 
-		final RedditPost post = getArguments().getParcelable("post");
+		final RawRedditPost post = getArguments().getParcelable("post");
 
 		items.addView(propView(context, R.string.props_title, StringEscapeUtils.unescapeHtml4(post.title.trim()), true));
 		items.addView(propView(context, R.string.props_author, post.author, false));

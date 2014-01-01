@@ -28,7 +28,7 @@ import android.widget.BaseAdapter;
 import org.quantumbadger.redreader.R;
 import org.quantumbadger.redreader.account.RedditAccount;
 import org.quantumbadger.redreader.fragments.MainMenuFragment;
-import org.quantumbadger.redreader.reddit.things.RedditSubreddit;
+import org.quantumbadger.redreader.reddit.things.RawRedditSubreddit;
 import org.quantumbadger.redreader.views.list.ListItemView;
 import org.quantumbadger.redreader.views.list.ListSectionHeaderView;
 import org.quantumbadger.redreader.views.list.MenuItem;
@@ -162,7 +162,7 @@ public class MainMenuAdapter extends BaseAdapter {
 		return new MenuItem(name, icon, clickListener, null);
 	}
 
-	private MenuItem makeItem(final String name, final RedditSubreddit subreddit) {
+	private MenuItem makeItem(final String name, final RawRedditSubreddit subreddit) {
 
 		final View.OnClickListener clickListener = new View.OnClickListener() {
 			public void onClick(final View view) {
@@ -173,12 +173,12 @@ public class MainMenuAdapter extends BaseAdapter {
 		return new MenuItem(name, null, clickListener, null);
 	}
 
-	public void setSubreddits(final Collection<RedditSubreddit> subreddits) {
+	public void setSubreddits(final Collection<RawRedditSubreddit> subreddits) {
 
 		new Handler(Looper.getMainLooper()).post(new Runnable() {
 			public void run() {
 
-				for(final RedditSubreddit subreddit : subreddits) {
+				for(final RawRedditSubreddit subreddit : subreddits) {
 					items.add(makeItem(subreddit.display_name.toLowerCase(), subreddit));
 				}
 

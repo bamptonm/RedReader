@@ -19,7 +19,7 @@ package org.quantumbadger.redreader.reddit.things;
 
 import org.quantumbadger.redreader.jsonwrap.JsonValue;
 
-public class RedditMessage {
+public class RawRedditMessage {
 
 	public String author, body, body_html, context, name, parent_id, subject, subreddit;
 	public boolean _json_new, was_comment;

@@ -30,7 +30,7 @@ import org.quantumbadger.redreader.common.LinkHandler;
 import org.quantumbadger.redreader.common.PrefsUtility;
 import org.quantumbadger.redreader.fragments.WebViewFragment;
 import org.quantumbadger.redreader.reddit.prepared.RedditPreparedPost;
-import org.quantumbadger.redreader.reddit.things.RedditPost;
+import org.quantumbadger.redreader.reddit.things.RawRedditPost;
 import org.quantumbadger.redreader.views.RedditPostView;
 
 public class WebViewActivity extends Activity implements RedditPostView.PostSelectionListener {
@@ -51,7 +51,7 @@ public class WebViewActivity extends Activity implements RedditPostView.PostSele
 		final Intent intent = getIntent();
 
 		url = intent.getStringExtra("url");
-		final RedditPost post = intent.getParcelableExtra("post");
+		final RawRedditPost post = intent.getParcelableExtra("post");
 
 		if(url == null) {
 			BugReportActivity.handleGlobalError(this, "No URL");

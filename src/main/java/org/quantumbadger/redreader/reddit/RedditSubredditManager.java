@@ -16,8 +16,8 @@ import org.quantumbadger.redreader.jsonwrap.JsonBuffered;
 import org.quantumbadger.redreader.jsonwrap.JsonBufferedArray;
 import org.quantumbadger.redreader.jsonwrap.JsonBufferedObject;
 import org.quantumbadger.redreader.jsonwrap.JsonValue;
-import org.quantumbadger.redreader.reddit.things.RedditMultireddit;
-import org.quantumbadger.redreader.reddit.things.RedditSubreddit;
+import org.quantumbadger.redreader.reddit.things.RawRedditMultireddit;
+import org.quantumbadger.redreader.reddit.things.RawRedditSubreddit;
 import org.quantumbadger.redreader.reddit.things.RedditThing;
 
 import java.net.URI;
@@ -40,9 +40,9 @@ public class RedditSubredditManager {
 	private static RedditAccount currentUser;
 	private static RedditSubredditManager singleton;
 
-	private final PermanentCache<RedditMultireddit.MultiredditId, RedditMultireddit, SubredditRequestFailure> multiredditCache;
+	private final PermanentCache<RawRedditMultireddit.MultiredditId, RawRedditMultireddit, SubredditRequestFailure> multiredditCache;
 	private final PermanentCache<SubredditListType, WritableHashSet<SubredditListType>, SubredditRequestFailure> subredditListCache;
-	private final WeakCache<String, RedditSubreddit, SubredditRequestFailure> subredditCache;
+	private final WeakCache<String, RawRedditSubreddit, SubredditRequestFailure> subredditCache;
 	private final Context context;
 
 	public static synchronized RedditSubredditManager getInstance(Context context, RedditAccount user) {
@@ -62,24 +62,24 @@ public class RedditSubredditManager {
 
 		// Multireddit cache
 
-		final RawObjectDB<RedditMultireddit.MultiredditId, RedditMultireddit> multiredditDb
-				= new RawObjectDB<RedditMultireddit.MultiredditId, RedditMultireddit>(context,
-				getDbFilename("multireddits", user), RedditMultireddit.class);
+		final RawObjectDB<RawRedditMultireddit.MultiredditId, RawRedditMultireddit> multiredditDb
+				= new RawObjectDB<RawRedditMultireddit.MultiredditId, RawRedditMultireddit>(context,
+				getDbFilename("multireddits", user), RawRedditMultireddit.class);
 
-		final ThreadedRawObjectDB<RedditMultireddit.MultiredditId, RedditMultireddit, SubredditRequestFailure> multiredditDbWrapper
-				= new ThreadedRawObjectDB<RedditMultireddit.MultiredditId, RedditMultireddit, SubredditRequestFailure>(multiredditDb, new MultiredditDataRequester());
+		final ThreadedRawObjectDB<RawRedditMultireddit.MultiredditId, RawRedditMultireddit, SubredditRequestFailure> multiredditDbWrapper
+				= new ThreadedRawObjectDB<RawRedditMultireddit.MultiredditId, RawRedditMultireddit, SubredditRequestFailure>(multiredditDb, new MultiredditDataRequester());
 
-		multiredditCache = new PermanentCache<RedditMultireddit.MultiredditId, RedditMultireddit, SubredditRequestFailure>(multiredditDbWrapper);
+		multiredditCache = new PermanentCache<RawRedditMultireddit.MultiredditId, RawRedditMultireddit, SubredditRequestFailure>(multiredditDbWrapper);
 
 		// Subreddit cache
 
-		final RawObjectDB<String, RedditSubreddit> subredditDb
-				= new RawObjectDB<String, RedditSubreddit>(context, getDbFilename("subreddits", user), RedditSubreddit.class);
+		final RawObjectDB<String, RawRedditSubreddit> subredditDb
+				= new RawObjectDB<String, RawRedditSubreddit>(context, getDbFilename("subreddits", user), RawRedditSubreddit.class);
 
-		final ThreadedRawObjectDB<String, RedditSubreddit, SubredditRequestFailure> subredditDbWrapper
-				= new ThreadedRawObjectDB<String, RedditSubreddit, SubredditRequestFailure>(subredditDb, new IndividualSubredditDataRequester());
+		final ThreadedRawObjectDB<String, RawRedditSubreddit, SubredditRequestFailure> subredditDbWrapper
+				= new ThreadedRawObjectDB<String, RawRedditSubreddit, SubredditRequestFailure>(subredditDb, new IndividualSubredditDataRequester());
 
-		subredditCache = new WeakCache<String, RedditSubreddit, SubredditRequestFailure>(subredditDbWrapper);
+		subredditCache = new WeakCache<String, RawRedditSubreddit, SubredditRequestFailure>(subredditDbWrapper);
 
 		// Subreddit list cache
 
@@ -101,16 +101,16 @@ public class RedditSubredditManager {
 
 	public void getSubreddit(String id,
 							 TimestampBound timestampBound,
-							 RequestResponseHandler<RedditSubreddit, SubredditRequestFailure> handler,
-							 UpdatedVersionListener<String, RedditSubreddit> updatedVersionListener) {
+							 RequestResponseHandler<RawRedditSubreddit, SubredditRequestFailure> handler,
+							 UpdatedVersionListener<String, RawRedditSubreddit> updatedVersionListener) {
 
 		subredditCache.performRequest(id, timestampBound, handler, updatedVersionListener);
 	}
 
-	public void getMultireddit(RedditMultireddit.MultiredditId id,
+	public void getMultireddit(RawRedditMultireddit.MultiredditId id,
 							   TimestampBound timestampBound,
-							   RequestResponseHandler<RedditMultireddit, SubredditRequestFailure> handler,
-							   UpdatedVersionListener<RedditMultireddit.MultiredditId, RedditMultireddit> updatedVersionListener) {
+							   RequestResponseHandler<RawRedditMultireddit, SubredditRequestFailure> handler,
+							   UpdatedVersionListener<RawRedditMultireddit.MultiredditId, RawRedditMultireddit> updatedVersionListener) {
 
 		multiredditCache.performRequest(id, timestampBound, handler, updatedVersionListener);
 	}
@@ -146,11 +146,11 @@ public class RedditSubredditManager {
 		}
 	}
 
-	private class IndividualSubredditDataRequester implements CacheDataSource<String, RedditSubreddit, SubredditRequestFailure> {
+	private class IndividualSubredditDataRequester implements CacheDataSource<String, RawRedditSubreddit, SubredditRequestFailure> {
 
 		public void performRequest(final String key,
 								   final TimestampBound timestampBound,
-								   final RequestResponseHandler<RedditSubreddit, SubredditRequestFailure> handler) {
+								   final RequestResponseHandler<RawRedditSubreddit, SubredditRequestFailure> handler) {
 
 			final CacheRequest aboutSubredditCacheRequest = new CacheRequest(
 					Constants.Reddit.getUri("/r/" + key + "/about.json"),
@@ -189,7 +189,7 @@ public class RedditSubredditManager {
 
 					try {
 						final RedditThing subredditThing = result.asObject(RedditThing.class);
-						final RedditSubreddit subreddit = subredditThing.asSubreddit();
+						final RawRedditSubreddit subreddit = subredditThing.asSubreddit();
 						subreddit.downloadTime = timestamp;
 						handler.onRequestSuccess(subreddit, timestamp);
 
@@ -204,16 +204,16 @@ public class RedditSubredditManager {
 
 		public void performRequest(Collection<String> keys,
 								   TimestampBound timestampBound,
-								   RequestResponseHandler<HashMap<String, RedditSubreddit>, SubredditRequestFailure> handler) {
+								   RequestResponseHandler<HashMap<String, RawRedditSubreddit>, SubredditRequestFailure> handler) {
 			// TODO batch API? or just make lots of requests and build up a hash map?
 			throw new UnsupportedOperationException();
 		}
 
-		public void performWrite(RedditSubreddit value) {
+		public void performWrite(RawRedditSubreddit value) {
 			throw new UnsupportedOperationException();
 		}
 
-		public void performWrite(Collection<RedditSubreddit> values) {
+		public void performWrite(Collection<RawRedditSubreddit> values) {
 			throw new UnsupportedOperationException();
 		}
 	}
@@ -324,7 +324,7 @@ public class RedditSubredditManager {
 					try {
 
 						final HashSet<String> output = new HashSet<String>();
-						final ArrayList<RedditSubreddit> toWrite = new ArrayList<RedditSubreddit>();
+						final ArrayList<RawRedditSubreddit> toWrite = new ArrayList<RawRedditSubreddit>();
 
 						final JsonBufferedObject redditListing = result.asObject().getObject("data");
 
@@ -343,7 +343,7 @@ public class RedditSubredditManager {
 
 						for(final JsonValue v : subreddits) {
 							final RedditThing thing = v.asObject(RedditThing.class);
-							final RedditSubreddit subreddit = thing.asSubreddit();
+							final RawRedditSubreddit subreddit = thing.asSubreddit();
 
 							toWrite.add(subreddit);
 							output.add(subreddit.name.toLowerCase()); // TODO is name the correct param?
@@ -394,19 +394,19 @@ public class RedditSubredditManager {
 		}
 	}
 
-	private final class MultiredditDataRequester implements CacheDataSource<RedditMultireddit.MultiredditId, RedditMultireddit, SubredditRequestFailure> {
+	private final class MultiredditDataRequester implements CacheDataSource<RawRedditMultireddit.MultiredditId, RawRedditMultireddit, SubredditRequestFailure> {
 
-		public void performRequest(RedditMultireddit.MultiredditId key, TimestampBound timestampBound, RequestResponseHandler<RedditMultireddit, SubredditRequestFailure> handler) {
+		public void performRequest(RawRedditMultireddit.MultiredditId key, TimestampBound timestampBound, RequestResponseHandler<RawRedditMultireddit, SubredditRequestFailure> handler) {
 		}
 
-		public void performRequest(Collection<RedditMultireddit.MultiredditId> keys, TimestampBound timestampBound, RequestResponseHandler<HashMap<RedditMultireddit.MultiredditId, RedditMultireddit>, SubredditRequestFailure> handler) {
+		public void performRequest(Collection<RawRedditMultireddit.MultiredditId> keys, TimestampBound timestampBound, RequestResponseHandler<HashMap<RawRedditMultireddit.MultiredditId, RawRedditMultireddit>, SubredditRequestFailure> handler) {
 		}
 
-		public void performWrite(RedditMultireddit value) {
+		public void performWrite(RawRedditMultireddit value) {
 			throw new UnsupportedOperationException();
 		}
 
-		public void performWrite(Collection<RedditMultireddit> values) {
+		public void performWrite(Collection<RawRedditMultireddit> values) {
 			throw new UnsupportedOperationException();
 		}
 	}

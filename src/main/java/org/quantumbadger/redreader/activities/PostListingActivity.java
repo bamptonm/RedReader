@@ -41,7 +41,7 @@ import org.quantumbadger.redreader.fragments.SessionListDialog;
 import org.quantumbadger.redreader.listingcontrollers.PostListingController;
 import org.quantumbadger.redreader.listingcontrollers.PostListingControllerSubreddit;
 import org.quantumbadger.redreader.reddit.prepared.RedditPreparedPost;
-import org.quantumbadger.redreader.reddit.things.RedditSubreddit;
+import org.quantumbadger.redreader.reddit.things.RawRedditSubreddit;
 import org.quantumbadger.redreader.views.RedditPostView;
 
 import java.util.UUID;
@@ -56,7 +56,7 @@ public class PostListingActivity extends RefreshableActivity
 
 	private PostListingFragment fragment;
 	private PostListingController controller;
-	private RedditSubreddit subreddit;
+	private RawRedditSubreddit subreddit;
 
 	private SharedPreferences sharedPreferences;
 
@@ -179,7 +179,7 @@ public class PostListingActivity extends RefreshableActivity
 
 				final String query = editText.getText().toString().toLowerCase().trim();
 
-				final RedditSubreddit sr = controller.getSubreddit();
+				final RawRedditSubreddit sr = controller.getSubreddit();
 				final String restrict_sr = sr.isReal() ? "on" : "off";
 
 				final String url;
@@ -191,7 +191,7 @@ public class PostListingActivity extends RefreshableActivity
 				}
 
 				final Intent intent = new Intent(PostListingActivity.this, PostListingActivity.class);
-				intent.putExtra("subreddit", new RedditSubreddit(url, "\"" + query + "\" search results", false));
+				intent.putExtra("subreddit", new RawRedditSubreddit(url, "\"" + query + "\" search results", false));
 				startActivity(intent);
 			}
 		});

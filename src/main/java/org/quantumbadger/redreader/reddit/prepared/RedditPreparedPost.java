@@ -57,8 +57,8 @@ import org.quantumbadger.redreader.fragments.WebViewFragment;
 import org.quantumbadger.redreader.image.ThumbnailScaler;
 import org.quantumbadger.redreader.reddit.APIResponseHandler;
 import org.quantumbadger.redreader.reddit.RedditAPI;
-import org.quantumbadger.redreader.reddit.things.RedditPost;
-import org.quantumbadger.redreader.reddit.things.RedditSubreddit;
+import org.quantumbadger.redreader.reddit.things.RawRedditPost;
+import org.quantumbadger.redreader.reddit.things.RawRedditSubreddit;
 import org.quantumbadger.redreader.views.FlatImageButton;
 import org.quantumbadger.redreader.views.RedditPostView;
 import org.quantumbadger.redreader.views.bezelmenu.SideToolbarOverlay;
@@ -71,7 +71,7 @@ import java.util.*;
 
 public final class RedditPreparedPost {
 
-	public final RedditPost src;
+	public final RawRedditPost src;
 
 	public final String title;
 	public SpannableStringBuilder postListDescription;
@@ -98,7 +98,7 @@ public final class RedditPreparedPost {
 	public final int commentCount;
 
 	private final boolean showSubreddit;
-	private final RedditSubreddit parentSubreddit;
+	private final RawRedditSubreddit parentSubreddit;
 
 	private RedditPostView boundView = null;
 
@@ -107,8 +107,8 @@ public final class RedditPreparedPost {
 	}
 
 	// TODO too many parameters
-	public RedditPreparedPost(final Context context, final CacheManager cm, final int listId, final RedditPost post,
-							  final long timestamp, final boolean showSubreddit, final RedditSubreddit parentSubreddit,
+	public RedditPreparedPost(final Context context, final CacheManager cm, final int listId, final RawRedditPost post,
+							  final long timestamp, final boolean showSubreddit, final RawRedditSubreddit parentSubreddit,
 							  final boolean updateNeeded, final boolean showThumbnails, final boolean precacheImages,
 							  final RedditAccount user) {
 
@@ -414,7 +414,7 @@ public final class RedditPreparedPost {
 
 			case GOTO_SUBREDDIT: {
 
-				final RedditSubreddit subreddit = new RedditSubreddit("/r/" + post.src.subreddit, "/r/" + post.src.subreddit, true);
+				final RawRedditSubreddit subreddit = new RawRedditSubreddit("/r/" + post.src.subreddit, "/r/" + post.src.subreddit, true);
 
 				final Intent intent = new Intent(activity, PostListingActivity.class);
 				intent.putExtra("subreddit", subreddit);
@@ -516,7 +516,7 @@ public final class RedditPreparedPost {
 	}
 
 	// lol, reddit api
-	private static boolean hasThumbnail(final RedditPost post) {
+	private static boolean hasThumbnail(final RawRedditPost post) {
 		return post.thumbnail != null
 				&& post.thumbnail.length() != 0
 				&& !post.thumbnail.equalsIgnoreCase("nsfw")

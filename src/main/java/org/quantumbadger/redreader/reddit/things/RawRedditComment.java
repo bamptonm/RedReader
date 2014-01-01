@@ -22,7 +22,7 @@ import android.os.Parcelable;
 import org.quantumbadger.redreader.jsonwrap.JsonValue;
 
 
-public final class RedditComment implements Parcelable {
+public final class RawRedditComment implements Parcelable {
 	
 	public String body, body_html, author, subreddit;
 	public String author_flair_text;
@@ -38,10 +38,10 @@ public final class RedditComment implements Parcelable {
 	
 	public long created, created_utc;
 
-	public RedditComment() {}
+	public RawRedditComment() {}
 
 	// one of the many reasons why the Android API is awful
-	private RedditComment(final Parcel in) {
+	private RawRedditComment(final Parcel in) {
 
 		body = in.readString();
 		body_html = in.readString();
@@ -116,13 +116,13 @@ public final class RedditComment implements Parcelable {
 		return 0;
 	}
 
-	public static final Parcelable.Creator<RedditComment> CREATOR = new Parcelable.Creator<RedditComment>() {
-		public RedditComment createFromParcel(final Parcel in) {
-			return new RedditComment(in);
+	public static final Parcelable.Creator<RawRedditComment> CREATOR = new Parcelable.Creator<RawRedditComment>() {
+		public RawRedditComment createFromParcel(final Parcel in) {
+			return new RawRedditComment(in);
 		}
 
-		public RedditComment[] newArray(final int size) {
-			return new RedditComment[size];
+		public RawRedditComment[] newArray(final int size) {
+			return new RawRedditComment[size];
 		}
 	};
 }

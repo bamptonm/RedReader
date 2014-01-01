@@ -49,8 +49,8 @@ import org.quantumbadger.redreader.jsonwrap.JsonBufferedObject;
 import org.quantumbadger.redreader.jsonwrap.JsonValue;
 import org.quantumbadger.redreader.reddit.prepared.RedditLegacyChangeDataManager;
 import org.quantumbadger.redreader.reddit.prepared.RedditPreparedPost;
-import org.quantumbadger.redreader.reddit.things.RedditPost;
-import org.quantumbadger.redreader.reddit.things.RedditSubreddit;
+import org.quantumbadger.redreader.reddit.things.RawRedditPost;
+import org.quantumbadger.redreader.reddit.things.RawRedditSubreddit;
 import org.quantumbadger.redreader.reddit.things.RedditThing;
 import org.quantumbadger.redreader.views.RedditPostView;
 import org.quantumbadger.redreader.views.SubredditHeader;
@@ -64,7 +64,7 @@ import java.util.UUID;
 
 public class PostListingFragment extends Fragment implements RedditPostView.PostSelectionListener, AbsListView.OnScrollListener {
 
-	private RedditSubreddit subreddit;
+	private RawRedditSubreddit subreddit;
 	private URI url;
 	private UUID session = null;
 	private CacheRequest.DownloadType downloadType;
@@ -153,7 +153,7 @@ public class PostListingFragment extends Fragment implements RedditPostView.Post
 		}
 	};
 
-	public static PostListingFragment newInstance(final RedditSubreddit subreddit, final URI url, final UUID session, final CacheRequest.DownloadType downloadType) {
+	public static PostListingFragment newInstance(final RawRedditSubreddit subreddit, final URI url, final UUID session, final CacheRequest.DownloadType downloadType) {
 
 		final PostListingFragment f = new PostListingFragment();
 
@@ -450,7 +450,7 @@ public class PostListingFragment extends Fragment implements RedditPostView.Post
 
 					if(!postThing.getKind().equals(RedditThing.Kind.POST)) continue;
 
-					final RedditPost post = postThing.asPost();
+					final RawRedditPost post = postThing.asPost();
 
 					after = post.name;
 

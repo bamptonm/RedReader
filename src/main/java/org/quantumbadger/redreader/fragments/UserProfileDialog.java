@@ -43,8 +43,8 @@ import org.quantumbadger.redreader.common.RRError;
 import org.quantumbadger.redreader.common.RRTime;
 import org.quantumbadger.redreader.reddit.APIResponseHandler;
 import org.quantumbadger.redreader.reddit.RedditAPI;
-import org.quantumbadger.redreader.reddit.things.RedditSubreddit;
-import org.quantumbadger.redreader.reddit.things.RedditUser;
+import org.quantumbadger.redreader.reddit.things.RawRedditSubreddit;
+import org.quantumbadger.redreader.reddit.things.RawRedditUser;
 import org.quantumbadger.redreader.views.liststatus.ErrorView;
 import org.quantumbadger.redreader.views.liststatus.LoadingView;
 
@@ -92,7 +92,7 @@ public class UserProfileDialog extends PropertiesDialog {
 			}
 
 			@Override
-			protected void onSuccess(final RedditUser user, long timestamp) {
+			protected void onSuccess(final RawRedditUser user, long timestamp) {
 
 				new Handler(Looper.getMainLooper()).post(new Runnable() {
 					public void run() {
@@ -152,7 +152,7 @@ public class UserProfileDialog extends PropertiesDialog {
 						postsButton.setOnClickListener(new View.OnClickListener() {
 							public void onClick(View v) {
 								final Intent intent = new Intent(context, PostListingActivity.class);
-								intent.putExtra("subreddit", new RedditSubreddit("/user/" + username + "/submitted", "Submitted by " + username, false));
+								intent.putExtra("subreddit", new RawRedditSubreddit("/user/" + username + "/submitted", "Submitted by " + username, false));
 								startActivity(intent);
 								dismiss();
 							}

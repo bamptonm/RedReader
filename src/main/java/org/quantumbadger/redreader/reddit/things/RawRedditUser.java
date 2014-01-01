@@ -20,7 +20,7 @@ package org.quantumbadger.redreader.reddit.things;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class RedditUser implements Parcelable {
+public class RawRedditUser implements Parcelable {
 
 	public int comment_karma, link_karma;
 
@@ -35,10 +35,10 @@ public class RedditUser implements Parcelable {
 		return 0;
 	}
 
-	public RedditUser() {}
+	public RawRedditUser() {}
 
 	// one of the many reasons why the Android API is awful
-	private RedditUser(final Parcel in) {
+	private RawRedditUser(final Parcel in) {
 
 		comment_karma = in.readInt();
 		link_karma = in.readInt();
@@ -102,13 +102,13 @@ public class RedditUser implements Parcelable {
 		parcel.writeString(name);
 	}
 
-	public static final Parcelable.Creator<RedditUser> CREATOR = new Parcelable.Creator<RedditUser>() {
-		public RedditUser createFromParcel(final Parcel in) {
-			return new RedditUser(in);
+	public static final Parcelable.Creator<RawRedditUser> CREATOR = new Parcelable.Creator<RawRedditUser>() {
+		public RawRedditUser createFromParcel(final Parcel in) {
+			return new RawRedditUser(in);
 		}
 
-		public RedditUser[] newArray(final int size) {
-			return new RedditUser[size];
+		public RawRedditUser[] newArray(final int size) {
+			return new RawRedditUser[size];
 		}
 	};
 }

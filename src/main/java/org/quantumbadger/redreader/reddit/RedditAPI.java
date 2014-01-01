@@ -29,9 +29,9 @@ import org.quantumbadger.redreader.cache.RequestFailureType;
 import org.quantumbadger.redreader.common.Constants;
 import org.quantumbadger.redreader.jsonwrap.JsonBufferedArray;
 import org.quantumbadger.redreader.jsonwrap.JsonValue;
-import org.quantumbadger.redreader.reddit.things.RedditSubreddit;
+import org.quantumbadger.redreader.reddit.things.RawRedditSubreddit;
+import org.quantumbadger.redreader.reddit.things.RawRedditUser;
 import org.quantumbadger.redreader.reddit.things.RedditThing;
-import org.quantumbadger.redreader.reddit.things.RedditUser;
 
 import java.net.URI;
 import java.util.*;
@@ -339,7 +339,7 @@ public final class RedditAPI {
 			@Override
 			public void onJsonParseStarted(final JsonValue result, final long timestamp, final UUID session, final boolean fromCache) {
 
-				final ArrayList<RedditSubreddit> output = new ArrayList<RedditSubreddit>();
+				final ArrayList<RawRedditSubreddit> output = new ArrayList<RawRedditSubreddit>();
 
 				try {
 
@@ -347,7 +347,7 @@ public final class RedditAPI {
 
 					for(final JsonValue v : subreddits) {
 						final RedditThing thing = v.asObject(RedditThing.class);
-						final RedditSubreddit subreddit = thing.asSubreddit();
+						final RawRedditSubreddit subreddit = thing.asSubreddit();
 
 						output.add(subreddit);
 					}
@@ -400,7 +400,7 @@ public final class RedditAPI {
 				try {
 
 					final RedditThing userThing = result.asObject(RedditThing.class);
-					final RedditUser userResult = userThing.asUser();
+					final RawRedditUser userResult = userThing.asUser();
 					responseHandler.notifySuccess(userResult, timestamp);
 
 				} catch(Throwable t) {

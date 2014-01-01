@@ -18,21 +18,21 @@
 package org.quantumbadger.redreader.listingcontrollers;
 
 import org.quantumbadger.redreader.common.Constants;
-import org.quantumbadger.redreader.reddit.things.RedditSubreddit;
+import org.quantumbadger.redreader.reddit.things.RawRedditSubreddit;
 
 import java.net.URI;
 
 // TODO add notification/header for abnormal sort order
 public class PostListingControllerSubreddit extends PostListingController {
 
-	private final RedditSubreddit subreddit;
+	private final RawRedditSubreddit subreddit;
 
-	public PostListingControllerSubreddit(final RedditSubreddit subreddit) {
+	public PostListingControllerSubreddit(final RawRedditSubreddit subreddit) {
 		this.subreddit = subreddit;
 	}
 
 	@Override
-	public RedditSubreddit getSubreddit() {
+	public RawRedditSubreddit getSubreddit() {
 		return subreddit;
 	}
 

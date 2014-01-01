@@ -30,7 +30,7 @@ import org.quantumbadger.redreader.common.RRTime;
 import org.quantumbadger.redreader.reddit.RedditPreparedInboxItem;
 import org.quantumbadger.redreader.reddit.prepared.markdown.MarkdownParagraphGroup;
 import org.quantumbadger.redreader.reddit.prepared.markdown.MarkdownParser;
-import org.quantumbadger.redreader.reddit.things.RedditMessage;
+import org.quantumbadger.redreader.reddit.things.RawRedditMessage;
 
 import java.util.HashSet;
 
@@ -39,11 +39,11 @@ public final class RedditPreparedMessage implements RedditPreparedInboxItem {
 	public SpannableStringBuilder header;
 	public final MarkdownParagraphGroup body;
 	public final String idAndType;
-	public final RedditMessage src;
+	public final RawRedditMessage src;
 
 	private final int rrCommentHeaderBoldCol, rrCommentHeaderAuthorCol;
 
-	public RedditPreparedMessage(final Context context, final RedditMessage message, final long timestamp) {
+	public RedditPreparedMessage(final Context context, final RawRedditMessage message, final long timestamp) {
 
 		this.src = message;
 

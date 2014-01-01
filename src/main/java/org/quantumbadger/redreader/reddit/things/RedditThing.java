@@ -51,23 +51,23 @@ public final class RedditThing {
 		return kinds.get(kind);
 	}
 
-	public RedditComment asComment() throws InstantiationException, IllegalAccessException, InterruptedException, IOException, NoSuchMethodException, InvocationTargetException {
-		return data.asObject(RedditComment.class);
+	public RawRedditComment asComment() throws InstantiationException, IllegalAccessException, InterruptedException, IOException, NoSuchMethodException, InvocationTargetException {
+		return data.asObject(RawRedditComment.class);
 	}
 	
-	public RedditPost asPost() throws InstantiationException, IllegalAccessException, InterruptedException, IOException, NoSuchMethodException, InvocationTargetException {
-		return data.asObject(RedditPost.class);
+	public RawRedditPost asPost() throws InstantiationException, IllegalAccessException, InterruptedException, IOException, NoSuchMethodException, InvocationTargetException {
+		return data.asObject(RawRedditPost.class);
 	}
 
-	public RedditSubreddit asSubreddit() throws InstantiationException, IllegalAccessException, InterruptedException, IOException, NoSuchMethodException, InvocationTargetException {
-		return data.asObject(RedditSubreddit.class);
+	public RawRedditSubreddit asSubreddit() throws InstantiationException, IllegalAccessException, InterruptedException, IOException, NoSuchMethodException, InvocationTargetException {
+		return data.asObject(RawRedditSubreddit.class);
 	}
 
-	public RedditUser asUser() throws InstantiationException, IllegalAccessException, InterruptedException, IOException, NoSuchMethodException, InvocationTargetException {
-		return data.asObject(RedditUser.class);
+	public RawRedditUser asUser() throws InstantiationException, IllegalAccessException, InterruptedException, IOException, NoSuchMethodException, InvocationTargetException {
+		return data.asObject(RawRedditUser.class);
 	}
 
-	public RedditMessage asMessage() throws IllegalAccessException, InterruptedException, InstantiationException, InvocationTargetException, NoSuchMethodException, IOException {
-		return data.asObject(RedditMessage.class);
+	public RawRedditMessage asMessage() throws IllegalAccessException, InterruptedException, InstantiationException, InvocationTargetException, NoSuchMethodException, IOException {
+		return data.asObject(RawRedditMessage.class);
 	}
 }

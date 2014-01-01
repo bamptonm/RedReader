@@ -39,7 +39,7 @@ import org.quantumbadger.redreader.reddit.RedditAPI;
 import org.quantumbadger.redreader.reddit.RedditPreparedInboxItem;
 import org.quantumbadger.redreader.reddit.prepared.markdown.MarkdownParagraphGroup;
 import org.quantumbadger.redreader.reddit.prepared.markdown.MarkdownParser;
-import org.quantumbadger.redreader.reddit.things.RedditComment;
+import org.quantumbadger.redreader.reddit.things.RawRedditComment;
 import org.quantumbadger.redreader.views.RedditCommentView;
 
 import java.util.EnumSet;
@@ -61,7 +61,7 @@ public final class RedditPreparedComment implements Hideable, RedditPreparedInbo
 
 	private int voteDirection;
 	public long lastChange;
-	public final RedditComment src;
+	public final RawRedditComment src;
 
 	private RedditCommentView boundView;
 
@@ -70,7 +70,7 @@ public final class RedditPreparedComment implements Hideable, RedditPreparedInbo
 
 	private final RedditPreparedPost parentPost;
 
-	public RedditPreparedComment(final Context context, final RedditComment comment, final RedditPreparedComment parentComment,
+	public RedditPreparedComment(final Context context, final RawRedditComment comment, final RedditPreparedComment parentComment,
 								 final long timestamp, final boolean needsUpdating, final RedditPreparedPost parentPost,
 								 final RedditAccount user, final EnumSet<PrefsUtility.AppearanceCommentHeaderItems> headerItems) {
 

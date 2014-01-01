@@ -21,7 +21,7 @@ package org.quantumbadger.redreader.reddit.things;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public final class RedditPost implements Parcelable {
+public final class RawRedditPost implements Parcelable {
 
 	public String id, name;
 	public String title, url, author, domain, subreddit, subreddit_id;
@@ -35,10 +35,10 @@ public final class RedditPost implements Parcelable {
 	public String selftext, permalink, link_flair_text, author_flair_text;
 	public String thumbnail; // an image URL
 
-	public RedditPost() {}
+	public RawRedditPost() {}
 
 	// one of the many reasons why the Android API is awful
-	private RedditPost(final Parcel in) {
+	private RawRedditPost(final Parcel in) {
 		id = in.readString();
 		name = in.readString();
 		title = in.readString();
@@ -124,13 +124,13 @@ public final class RedditPost implements Parcelable {
 		parcel.writeString(thumbnail);
 	}
 
-	public static final Parcelable.Creator<RedditPost> CREATOR = new Parcelable.Creator<RedditPost>() {
-		public RedditPost createFromParcel(final Parcel in) {
-			return new RedditPost(in);
+	public static final Parcelable.Creator<RawRedditPost> CREATOR = new Parcelable.Creator<RawRedditPost>() {
+		public RawRedditPost createFromParcel(final Parcel in) {
+			return new RawRedditPost(in);
 		}
 
-		public RedditPost[] newArray(final int size) {
-			return new RedditPost[size];
+		public RawRedditPost[] newArray(final int size) {
+			return new RawRedditPost[size];
 		}
 	};
 }

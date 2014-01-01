@@ -22,8 +22,8 @@ import org.apache.http.StatusLine;
 import org.quantumbadger.redreader.activities.BugReportActivity;
 import org.quantumbadger.redreader.cache.RequestFailureType;
 import org.quantumbadger.redreader.common.RRError;
-import org.quantumbadger.redreader.reddit.things.RedditSubreddit;
-import org.quantumbadger.redreader.reddit.things.RedditUser;
+import org.quantumbadger.redreader.reddit.things.RawRedditSubreddit;
+import org.quantumbadger.redreader.reddit.things.RawRedditUser;
 
 import java.util.List;
 
@@ -120,7 +120,7 @@ public abstract class APIResponseHandler {
 			super(context);
 		}
 
-		public final void notifySuccess(final List<RedditSubreddit> result, final long timestamp) {
+		public final void notifySuccess(final List<RawRedditSubreddit> result, final long timestamp) {
 			try {
 				onSuccess(result, timestamp);
 			} catch(Throwable t1) {
@@ -161,7 +161,7 @@ public abstract class APIResponseHandler {
 
 		protected abstract void onDownloadNecessary();
 		protected abstract void onDownloadStarted();
-		protected abstract void onSuccess(List<RedditSubreddit> result, long timestamp);
+		protected abstract void onSuccess(List<RawRedditSubreddit> result, long timestamp);
 	}
 
 	public static abstract class UserResponseHandler extends APIResponseHandler {
@@ -170,7 +170,7 @@ public abstract class APIResponseHandler {
 			super(context);
 		}
 
-		public final void notifySuccess(final RedditUser result, final long timestamp) {
+		public final void notifySuccess(final RawRedditUser result, final long timestamp) {
 			try {
 				onSuccess(result, timestamp);
 			} catch(Throwable t1) {
@@ -198,6 +198,6 @@ public abstract class APIResponseHandler {
 
 		protected abstract void onDownloadStarted();
 
-		protected abstract void onSuccess(RedditUser result, long timestamp);
+		protected abstract void onSuccess(RawRedditUser result, long timestamp);
 	}
 }

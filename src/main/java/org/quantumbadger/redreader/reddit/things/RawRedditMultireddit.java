@@ -21,7 +21,7 @@ import org.quantumbadger.redreader.io.WritableHashSet;
 import org.quantumbadger.redreader.io.WritableObject;
 import org.quantumbadger.redreader.jsonwrap.JsonBufferedObject;
 
-public class RedditMultireddit implements WritableObject<RedditMultireddit.MultiredditId> {
+public class RawRedditMultireddit implements WritableObject<RawRedditMultireddit.MultiredditId> {
 
 	public MultiredditId getKey() {
 		return new MultiredditId(multiredditUser, multiredditName);
@@ -57,7 +57,7 @@ public class RedditMultireddit implements WritableObject<RedditMultireddit.Multi
 		}
 	}
 
-	public RedditMultireddit(JsonBufferedObject object) {
+	public RawRedditMultireddit(JsonBufferedObject object) {
 		// TODO
 	}
 }

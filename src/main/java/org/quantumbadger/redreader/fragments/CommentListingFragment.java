@@ -66,9 +66,9 @@ import org.quantumbadger.redreader.reddit.prepared.RedditLegacyChangeDataManager
 import org.quantumbadger.redreader.reddit.prepared.RedditPreparedComment;
 import org.quantumbadger.redreader.reddit.prepared.RedditPreparedPost;
 import org.quantumbadger.redreader.reddit.prepared.markdown.MarkdownParser;
-import org.quantumbadger.redreader.reddit.things.RedditComment;
-import org.quantumbadger.redreader.reddit.things.RedditPost;
-import org.quantumbadger.redreader.reddit.things.RedditSubreddit;
+import org.quantumbadger.redreader.reddit.things.RawRedditComment;
+import org.quantumbadger.redreader.reddit.things.RawRedditPost;
+import org.quantumbadger.redreader.reddit.things.RawRedditSubreddit;
 import org.quantumbadger.redreader.reddit.things.RedditThing;
 import org.quantumbadger.redreader.views.RedditCommentView;
 import org.quantumbadger.redreader.views.RedditPostHeaderView;
@@ -389,11 +389,11 @@ public class CommentListingFragment extends Fragment
 						final JsonBufferedObject listing = thing.getObject("data");
 						final JsonBufferedArray postContainer = listing.getArray("children");
 						final RedditThing postThing = postContainer.getObject(0, RedditThing.class);
-						final RedditPost post = postThing.asPost();
+						final RawRedditPost post = postThing.asPost();
 
 						// TODO show upvote/downvote/etc buttons
 
-						final RedditSubreddit parentSubreddit = new RedditSubreddit("/r/" + post.subreddit, post.subreddit, false);
+						final RawRedditSubreddit parentSubreddit = new RawRedditSubreddit("/r/" + post.subreddit, post.subreddit, false);
 
 						CommentListingFragment.this.post = new RedditPreparedPost(context, cm, 0, post, timestamp, true, parentSubreddit, false, false, false, user);
 
@@ -468,7 +468,7 @@ public class CommentListingFragment extends Fragment
 
 				if(commentThing.getKind() != RedditThing.Kind.COMMENT) return;
 
-				final RedditComment comment = commentThing.asComment();
+				final RawRedditComment comment = commentThing.asComment();
 				final RedditPreparedComment preparedComment = new RedditPreparedComment(context, comment, parent,
 						timestamp, needsChanging.contains(comment.name), post, user, headerItems);
 

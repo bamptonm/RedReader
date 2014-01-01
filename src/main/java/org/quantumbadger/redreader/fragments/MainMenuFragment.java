@@ -42,7 +42,7 @@ import org.quantumbadger.redreader.common.General;
 import org.quantumbadger.redreader.common.RRError;
 import org.quantumbadger.redreader.reddit.APIResponseHandler;
 import org.quantumbadger.redreader.reddit.RedditAPI;
-import org.quantumbadger.redreader.reddit.things.RedditSubreddit;
+import org.quantumbadger.redreader.reddit.things.RawRedditSubreddit;
 import org.quantumbadger.redreader.views.liststatus.ErrorView;
 import org.quantumbadger.redreader.views.liststatus.LoadingView;
 
@@ -137,7 +137,7 @@ public class MainMenuFragment extends Fragment implements MainMenuSelectionListe
 			}
 
 			@Override
-			protected void onSuccess(final List<RedditSubreddit> result, final long timestamp) {
+			protected void onSuccess(final List<RawRedditSubreddit> result, final long timestamp) {
 
 				if(result.size() == 0) {
 					// Just get the defaults instead
@@ -211,7 +211,7 @@ public class MainMenuFragment extends Fragment implements MainMenuSelectionListe
 		((MainMenuSelectionListener)getSupportActivity()).onSelected(type, name);
 	}
 
-	public void onSelected(final RedditSubreddit subreddit) {
+	public void onSelected(final RawRedditSubreddit subreddit) {
 		((MainMenuSelectionListener)getSupportActivity()).onSelected(subreddit);
 	}
 }

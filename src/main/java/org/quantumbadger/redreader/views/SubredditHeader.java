@@ -23,7 +23,7 @@ import android.graphics.Typeface;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.holoeverywhere.widget.LinearLayout;
 import org.holoeverywhere.widget.TextView;
-import org.quantumbadger.redreader.reddit.things.RedditSubreddit;
+import org.quantumbadger.redreader.reddit.things.RawRedditSubreddit;
 import org.quantumbadger.redreader.views.list.RRTouchable;
 
 import java.text.NumberFormat;
@@ -32,7 +32,7 @@ import java.util.Locale;
 public final class SubredditHeader extends LinearLayout implements RRTouchable {
 
 	// TODO make XML
-	public SubredditHeader(final Context context, final RedditSubreddit subreddit) {
+	public SubredditHeader(final Context context, final RawRedditSubreddit subreddit) {
 
 		super(context);
 

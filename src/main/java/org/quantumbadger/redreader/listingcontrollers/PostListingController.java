@@ -19,7 +19,7 @@ package org.quantumbadger.redreader.listingcontrollers;
 
 import org.quantumbadger.redreader.cache.CacheRequest;
 import org.quantumbadger.redreader.fragments.PostListingFragment;
-import org.quantumbadger.redreader.reddit.things.RedditSubreddit;
+import org.quantumbadger.redreader.reddit.things.RawRedditSubreddit;
 
 import java.net.URI;
 import java.util.UUID;
@@ -54,7 +54,7 @@ public abstract class PostListingController {
 
 	public abstract URI getUri();
 
-	public abstract RedditSubreddit getSubreddit();
+	public abstract RawRedditSubreddit getSubreddit();
 
 	public final PostListingFragment get(final boolean force) {
 		if(force) session = null;

@@ -31,7 +31,7 @@ import org.quantumbadger.redreader.common.LinkHandler;
 import org.quantumbadger.redreader.common.PrefsUtility;
 import org.quantumbadger.redreader.fragments.ImageViewFragment;
 import org.quantumbadger.redreader.reddit.prepared.RedditPreparedPost;
-import org.quantumbadger.redreader.reddit.things.RedditPost;
+import org.quantumbadger.redreader.reddit.things.RawRedditPost;
 import org.quantumbadger.redreader.views.RedditPostView;
 
 import java.net.URI;
@@ -53,7 +53,7 @@ public class ImageViewActivity extends Activity implements RedditPostView.PostSe
 		final Intent intent = getIntent();
 
 		final URI url = General.uriFromString(intent.getDataString());
-		final RedditPost post = intent.getParcelableExtra("post");
+		final RawRedditPost post = intent.getParcelableExtra("post");
 
 		if(url == null) {
 			General.quickToast(this, "Invalid URL. Trying external browser.");

@@ -24,7 +24,7 @@ import org.quantumbadger.redreader.io.WritableObject;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RedditSubreddit implements Parcelable, Comparable<RedditSubreddit>, WritableObject {
+public class RawRedditSubreddit implements Parcelable, Comparable<RawRedditSubreddit>, WritableObject {
 
 	public static final int db_version = 1;
 
@@ -88,7 +88,7 @@ public class RedditSubreddit implements Parcelable, Comparable<RedditSubreddit>,
 		out.writeInt(isSortable ? 1 : 0);
 	}
 
-	public RedditSubreddit() {
+	public RawRedditSubreddit() {
 		isReal = true;
 		isSortable = true;
 	}
@@ -97,14 +97,14 @@ public class RedditSubreddit implements Parcelable, Comparable<RedditSubreddit>,
 		return isReal;
 	}
 
-	public RedditSubreddit(String url, String title, final boolean isSortable) {
+	public RawRedditSubreddit(String url, String title, final boolean isSortable) {
 		this.url = url;
 		this.title = title;
 		isReal = false;
 		this.isSortable = isSortable;
 	}
 
-	public RedditSubreddit(final Parcel parcel) {
+	public RawRedditSubreddit(final Parcel parcel) {
 		header_img = parcel.readString();
 		header_title = parcel.readString();
 		//description = parcel.readString();
@@ -130,17 +130,17 @@ public class RedditSubreddit implements Parcelable, Comparable<RedditSubreddit>,
 		isSortable = parcel.readInt() == 1;
 	}
 
-	public static final Parcelable.Creator<RedditSubreddit> CREATOR = new Parcelable.Creator<RedditSubreddit>() {
-		public RedditSubreddit createFromParcel(final Parcel in) {
-			return new RedditSubreddit(in);
+	public static final Parcelable.Creator<RawRedditSubreddit> CREATOR = new Parcelable.Creator<RawRedditSubreddit>() {
+		public RawRedditSubreddit createFromParcel(final Parcel in) {
+			return new RawRedditSubreddit(in);
 		}
 
-		public RedditSubreddit[] newArray(final int size) {
-			return new RedditSubreddit[size];
+		public RawRedditSubreddit[] newArray(final int size) {
+			return new RawRedditSubreddit[size];
 		}
 	};
 
-	public int compareTo(final RedditSubreddit another) {
+	public int compareTo(final RawRedditSubreddit another) {
 		return display_name.toLowerCase().compareTo(another.display_name.toLowerCase());
 	}
 
