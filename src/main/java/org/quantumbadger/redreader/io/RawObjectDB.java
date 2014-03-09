@@ -90,9 +90,8 @@ public class RawObjectDB<K, E extends WritableObject<K>> extends SQLiteOpenHelpe
 				|| fieldType == Integer.TYPE
 				|| fieldType == Long.TYPE) {
 			return " INTEGER";
-		}
 
-		else if(fieldType == Boolean.class
+		} else if(fieldType == Boolean.class
 				|| fieldType == Boolean.TYPE) {
 			return " INTEGER";
 
@@ -197,14 +196,14 @@ public class RawObjectDB<K, E extends WritableObject<K>> extends SQLiteOpenHelpe
 		try {
 			final Constructor<E> constructor = clazz.getConstructor(WritableObject.CreationData.class);
 			final String id = cursor.getString(fields.length);
-			final long timestamp = cursor.getLong(fields.length - 1);
+			final long timestamp = cursor.getLong(fields.length + 1);
 			obj = constructor.newInstance(new WritableObject.CreationData(id, timestamp));
 
 		} catch(NoSuchMethodException e) {
 			throw new RuntimeException(e);
 		}
 
-		for(int i = 0; i < fields.length - 2; i++) {
+		for(int i = 0; i < fields.length; i++) {
 
 			final Field field = fields[i];
 			final Class<?> fieldType = field.getType();

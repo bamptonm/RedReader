@@ -40,7 +40,6 @@ public class RawRedditMultireddit implements WritableObject<RawRedditMultireddit
 
 	@WritableField public String multiredditUser, multiredditName;
 
-	// TODO preserve timestamp and id!!!
 	@WritableField public WritableHashSet subreddits;
 
 	public static class MultiredditId {

@@ -13,8 +13,8 @@ public class WritableHashSet implements WritableObject<String> {
 	private transient HashSet<String> hashSet = null;
 	@WritableField private String serialised;
 
-	@WritableObjectKey private String key;
-	@WritableObjectTimestamp private long timestamp;
+	@WritableObjectKey private final String key;
+	@WritableObjectTimestamp private final long timestamp;
 
 	public WritableHashSet(HashSet<String> data, long timestamp, String key) {
 		this.hashSet = data;
