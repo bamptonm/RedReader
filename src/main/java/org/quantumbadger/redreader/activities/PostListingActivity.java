@@ -41,7 +41,7 @@ import org.quantumbadger.redreader.fragments.SessionListDialog;
 import org.quantumbadger.redreader.listingcontrollers.PostListingController;
 import org.quantumbadger.redreader.listingcontrollers.PostListingControllerSubreddit;
 import org.quantumbadger.redreader.reddit.prepared.RedditPreparedPost;
-import org.quantumbadger.redreader.reddit.things.RawRedditSubreddit;
+import org.quantumbadger.redreader.reddit.things.raw.RawRedditSubreddit;
 import org.quantumbadger.redreader.views.RedditPostView;
 
 import java.util.UUID;

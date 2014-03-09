@@ -18,7 +18,7 @@
 package org.quantumbadger.redreader.adapters;
 
 import org.quantumbadger.redreader.fragments.MainMenuFragment;
-import org.quantumbadger.redreader.reddit.things.RawRedditSubreddit;
+import org.quantumbadger.redreader.reddit.things.raw.RawRedditSubreddit;
 
 public interface MainMenuSelectionListener {
 

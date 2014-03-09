@@ -15,7 +15,7 @@
  * along with RedReader.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package org.quantumbadger.redreader.reddit.things;
+package org.quantumbadger.redreader.reddit.things.raw;
 
 import org.quantumbadger.redreader.io.WritableHashSet;
 import org.quantumbadger.redreader.io.WritableObject;
@@ -31,17 +31,16 @@ public class RawRedditMultireddit implements WritableObject<RawRedditMultireddit
 		return downloadTime;
 	}
 
-	public int dbVersion() {
-		return 1;
-	}
+	@WritableObjectVersion public static int DB_VERSION = 1;
 
-	public long downloadTime, created, created_utc;
+	@WritableObjectTimestamp public long downloadTime;
+	public long created, created_utc;
 	public String name, visibility, path;
 	public boolean can_edit;
 
 	public String multiredditUser, multiredditName;
 
-	public WritableHashSet<String> subreddits;
+	public WritableHashSet subreddits;
 
 	public static class MultiredditId {
 		public final String user, multiredditName;

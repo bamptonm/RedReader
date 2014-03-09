@@ -50,7 +50,7 @@ import org.quantumbadger.redreader.jsonwrap.JsonValue;
 import org.quantumbadger.redreader.reddit.RedditPreparedInboxItem;
 import org.quantumbadger.redreader.reddit.prepared.RedditPreparedComment;
 import org.quantumbadger.redreader.reddit.prepared.RedditPreparedMessage;
-import org.quantumbadger.redreader.reddit.things.RedditThing;
+import org.quantumbadger.redreader.reddit.things.raw.RedditThing;
 import org.quantumbadger.redreader.views.liststatus.ErrorView;
 import org.quantumbadger.redreader.views.liststatus.LoadingView;
 

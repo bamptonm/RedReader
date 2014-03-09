@@ -43,8 +43,8 @@ import org.quantumbadger.redreader.common.RRError;
 import org.quantumbadger.redreader.common.RRTime;
 import org.quantumbadger.redreader.reddit.APIResponseHandler;
 import org.quantumbadger.redreader.reddit.RedditAPI;
-import org.quantumbadger.redreader.reddit.things.RawRedditSubreddit;
-import org.quantumbadger.redreader.reddit.things.RawRedditUser;
+import org.quantumbadger.redreader.reddit.things.raw.RawRedditSubreddit;
+import org.quantumbadger.redreader.reddit.things.raw.RawRedditUser;
 import org.quantumbadger.redreader.views.liststatus.ErrorView;
 import org.quantumbadger.redreader.views.liststatus.LoadingView;
 

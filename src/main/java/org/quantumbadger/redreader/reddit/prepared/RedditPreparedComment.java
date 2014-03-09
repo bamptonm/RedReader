@@ -39,7 +39,7 @@ import org.quantumbadger.redreader.reddit.RedditAPI;
 import org.quantumbadger.redreader.reddit.RedditPreparedInboxItem;
 import org.quantumbadger.redreader.reddit.prepared.markdown.MarkdownParagraphGroup;
 import org.quantumbadger.redreader.reddit.prepared.markdown.MarkdownParser;
-import org.quantumbadger.redreader.reddit.things.RawRedditComment;
+import org.quantumbadger.redreader.reddit.things.raw.RawRedditComment;
 import org.quantumbadger.redreader.views.RedditCommentView;
 
 import java.util.EnumSet;

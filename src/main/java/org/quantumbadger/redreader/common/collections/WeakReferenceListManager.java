@@ -9,6 +9,10 @@ public final class WeakReferenceListManager<E> {
 	// TODO avoid linked list here -- a new object is created for every Link<>
 	private final LinkedList<WeakReference<E>> data = new LinkedList<WeakReference<E>>();
 
+	public synchronized int size() {
+		return data.size();
+	}
+
 	public synchronized void add(final E object) {
 		data.add(new WeakReference<E>(object));
 	}

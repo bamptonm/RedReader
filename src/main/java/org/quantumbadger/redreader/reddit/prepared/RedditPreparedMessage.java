@@ -30,7 +30,7 @@ import org.quantumbadger.redreader.common.RRTime;
 import org.quantumbadger.redreader.reddit.RedditPreparedInboxItem;
 import org.quantumbadger.redreader.reddit.prepared.markdown.MarkdownParagraphGroup;
 import org.quantumbadger.redreader.reddit.prepared.markdown.MarkdownParser;
-import org.quantumbadger.redreader.reddit.things.RawRedditMessage;
+import org.quantumbadger.redreader.reddit.things.raw.RawRedditMessage;
 
 import java.util.HashSet;
 

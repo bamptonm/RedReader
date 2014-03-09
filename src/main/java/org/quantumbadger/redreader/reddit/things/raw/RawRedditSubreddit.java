@@ -15,7 +15,7 @@
  * along with RedReader.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package org.quantumbadger.redreader.reddit.things;
+package org.quantumbadger.redreader.reddit.things.raw;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -24,30 +24,32 @@ import org.quantumbadger.redreader.io.WritableObject;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RawRedditSubreddit implements Parcelable, Comparable<RawRedditSubreddit>, WritableObject {
-
-	public static final int db_version = 1;
+public class RawRedditSubreddit implements Parcelable, Comparable<RawRedditSubreddit>, WritableObject<String> {
 
 	public String getKey() {
-		return null; // TODO canonicalize
+		return getCanonicalName();
 	}
 
 	public long getTimestamp() {
 		return downloadTime;
 	}
 
+	@WritableObjectVersion public static int DB_VERSION = 1;
+
 	public static final class InvalidSubredditNameException extends RuntimeException {}
 
-	public String header_img, header_title;
-	public String description, description_html, public_description;
-	public String id, name, title, display_name, url;
-	public long created, created_utc;
-	public Integer accounts_active, subscribers;
-	public boolean over18;
-	public long downloadTime;
+	@WritableField public String header_img, header_title;
+	@WritableField public String description, description_html, public_description;
+	@WritableField public String id, name, title, display_name, url;
+	@WritableField public long created, created_utc;
+	@WritableField public Integer accounts_active, subscribers;
+	@WritableField public boolean over18;
+
+	@WritableObjectTimestamp public long downloadTime;
 
 	// TODO remove
 	private transient final boolean isReal, isSortable;
+
     private static final Pattern NAME_PATTERN = Pattern.compile("(/)?(r/)?([\\w\\+\\-]+)");
 
     /**
@@ -55,7 +57,7 @@ public class RawRedditSubreddit implements Parcelable, Comparable<RawRedditSubre
      * @return a subreddit name in the form "/r/subreddit" (lower-cased)
      * @throws InvalidSubredditNameException if {@code name} is null or not in the expected format
      */
-    public static String getNormalizedName(String name) throws InvalidSubredditNameException {
+    private static String getCanonicalName(String name) throws InvalidSubredditNameException {
         Matcher matcher = NAME_PATTERN.matcher(name);
         if(matcher.matches()) {
             return "/r/" + matcher.group(3).toLowerCase();
@@ -63,6 +65,10 @@ public class RawRedditSubreddit implements Parcelable, Comparable<RawRedditSubre
             throw new InvalidSubredditNameException();
         }
     }
+
+	public String getCanonicalName() {
+		return getCanonicalName(display_name);
+	}
 
 	public int describeContents() {
 		return 0;

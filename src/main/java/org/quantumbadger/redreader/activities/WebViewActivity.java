@@ -30,7 +30,7 @@ import org.quantumbadger.redreader.common.LinkHandler;
 import org.quantumbadger.redreader.common.PrefsUtility;
 import org.quantumbadger.redreader.fragments.WebViewFragment;
 import org.quantumbadger.redreader.reddit.prepared.RedditPreparedPost;
-import org.quantumbadger.redreader.reddit.things.RawRedditPost;
+import org.quantumbadger.redreader.reddit.things.raw.RawRedditPost;
 import org.quantumbadger.redreader.views.RedditPostView;
 
 public class WebViewActivity extends Activity implements RedditPostView.PostSelectionListener {

@@ -3,19 +3,26 @@ package org.quantumbadger.redreader.io;
 import java.util.Collection;
 import java.util.HashSet;
 
-public class WritableHashSet<K> implements WritableObject<K> {
+public class WritableHashSet implements WritableObject<String> {
+
+	@WritableObjectVersion public static int DB_VERSION = 1;
 
 	private transient HashSet<String> hashSet = null;
-	private String serialised;
+	@WritableField private String serialised;
 
-	private long timestamp;
-	private K key;
+	@WritableObjectKey private String key;
+	@WritableObjectTimestamp private long timestamp;
 
-	public WritableHashSet(HashSet<String> data, long timestamp, K key) {
+	public WritableHashSet(HashSet<String> data, long timestamp, String key) {
 		this.hashSet = data;
 		this.timestamp = timestamp;
 		this.key = key;
 		serialised = listToEscapedString(hashSet);
+	}
+
+	public WritableHashSet(CreationData creationData) {
+		this.timestamp = creationData.timestamp;
+		this.key = creationData.key;
 	}
 
 	public WritableHashSet(String data) {
@@ -34,16 +41,12 @@ public class WritableHashSet<K> implements WritableObject<K> {
 		return (hashSet = escapedStringToSet(serialised));
 	}
 
-	public K getKey() {
+	public String getKey() {
 		return key;
 	}
 
 	public long getTimestamp() {
 		return timestamp;
-	}
-
-	public int dbVersion() {
-		return 1;
 	}
 
 	public static String listToEscapedString(final Collection<String> list) {
@@ -81,25 +84,28 @@ public class WritableHashSet<K> implements WritableObject<K> {
 
 		final HashSet<String> result = new HashSet<String>();
 
-		boolean isEscaped = false;
-		final StringBuilder sb = new StringBuilder();
+		if(str != null) {
 
-		for(int i = 0; i < str.length(); i++) {
+			boolean isEscaped = false;
+			final StringBuilder sb = new StringBuilder();
 
-			final char c = str.charAt(i);
+			for(int i = 0; i < str.length(); i++) {
 
-			if(c == ';' && !isEscaped) {
-				result.add(sb.toString());
-				sb.setLength(0);
+				final char c = str.charAt(i);
 
-			} else if(c == '\\') {
-				if(isEscaped) sb.append('\\');
+				if(c == ';' && !isEscaped) {
+					result.add(sb.toString());
+					sb.setLength(0);
 
-			} else {
-				sb.append(c);
+				} else if(c == '\\') {
+					if(isEscaped) sb.append('\\');
+
+				} else {
+					sb.append(c);
+				}
+
+				isEscaped = c == '\\' && !isEscaped;
 			}
-
-			isEscaped = c == '\\' && !isEscaped;
 		}
 
 		return result;

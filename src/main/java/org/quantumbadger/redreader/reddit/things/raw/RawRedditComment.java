@@ -15,7 +15,7 @@
  * along with RedReader.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package org.quantumbadger.redreader.reddit.things;
+package org.quantumbadger.redreader.reddit.things.raw;
 
 import android.os.Parcel;
 import android.os.Parcelable;

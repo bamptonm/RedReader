@@ -66,10 +66,10 @@ import org.quantumbadger.redreader.reddit.prepared.RedditLegacyChangeDataManager
 import org.quantumbadger.redreader.reddit.prepared.RedditPreparedComment;
 import org.quantumbadger.redreader.reddit.prepared.RedditPreparedPost;
 import org.quantumbadger.redreader.reddit.prepared.markdown.MarkdownParser;
-import org.quantumbadger.redreader.reddit.things.RawRedditComment;
-import org.quantumbadger.redreader.reddit.things.RawRedditPost;
-import org.quantumbadger.redreader.reddit.things.RawRedditSubreddit;
-import org.quantumbadger.redreader.reddit.things.RedditThing;
+import org.quantumbadger.redreader.reddit.things.raw.RawRedditComment;
+import org.quantumbadger.redreader.reddit.things.raw.RawRedditPost;
+import org.quantumbadger.redreader.reddit.things.raw.RawRedditSubreddit;
+import org.quantumbadger.redreader.reddit.things.raw.RedditThing;
 import org.quantumbadger.redreader.views.RedditCommentView;
 import org.quantumbadger.redreader.views.RedditPostHeaderView;
 import org.quantumbadger.redreader.views.RedditPostView;

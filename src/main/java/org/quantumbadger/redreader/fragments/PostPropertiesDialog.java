@@ -24,7 +24,7 @@ import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.widget.LinearLayout;
 import org.quantumbadger.redreader.R;
 import org.quantumbadger.redreader.common.RRTime;
-import org.quantumbadger.redreader.reddit.things.RawRedditPost;
+import org.quantumbadger.redreader.reddit.things.raw.RawRedditPost;
 
 public final class PostPropertiesDialog extends PropertiesDialog {
 

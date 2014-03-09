@@ -18,7 +18,7 @@
 package org.quantumbadger.redreader.listingcontrollers;
 
 import org.quantumbadger.redreader.common.Constants;
-import org.quantumbadger.redreader.reddit.things.RawRedditSubreddit;
+import org.quantumbadger.redreader.reddit.things.raw.RawRedditSubreddit;
 
 import java.net.URI;
 

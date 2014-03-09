@@ -22,8 +22,8 @@ import org.apache.http.StatusLine;
 import org.quantumbadger.redreader.activities.BugReportActivity;
 import org.quantumbadger.redreader.cache.RequestFailureType;
 import org.quantumbadger.redreader.common.RRError;
-import org.quantumbadger.redreader.reddit.things.RawRedditSubreddit;
-import org.quantumbadger.redreader.reddit.things.RawRedditUser;
+import org.quantumbadger.redreader.reddit.things.raw.RawRedditSubreddit;
+import org.quantumbadger.redreader.reddit.things.raw.RawRedditUser;
 
 import java.util.List;
 

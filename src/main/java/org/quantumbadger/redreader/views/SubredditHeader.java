@@ -23,7 +23,7 @@ import android.graphics.Typeface;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.holoeverywhere.widget.LinearLayout;
 import org.holoeverywhere.widget.TextView;
-import org.quantumbadger.redreader.reddit.things.RawRedditSubreddit;
+import org.quantumbadger.redreader.reddit.things.raw.RawRedditSubreddit;
 import org.quantumbadger.redreader.views.list.RRTouchable;
 
 import java.text.NumberFormat;

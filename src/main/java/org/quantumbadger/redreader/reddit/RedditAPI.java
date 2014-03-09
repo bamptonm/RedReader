@@ -29,9 +29,9 @@ import org.quantumbadger.redreader.cache.RequestFailureType;
 import org.quantumbadger.redreader.common.Constants;
 import org.quantumbadger.redreader.jsonwrap.JsonBufferedArray;
 import org.quantumbadger.redreader.jsonwrap.JsonValue;
-import org.quantumbadger.redreader.reddit.things.RawRedditSubreddit;
-import org.quantumbadger.redreader.reddit.things.RawRedditUser;
-import org.quantumbadger.redreader.reddit.things.RedditThing;
+import org.quantumbadger.redreader.reddit.things.raw.RawRedditSubreddit;
+import org.quantumbadger.redreader.reddit.things.raw.RawRedditUser;
+import org.quantumbadger.redreader.reddit.things.raw.RedditThing;
 
 import java.net.URI;
 import java.util.*;
@@ -306,6 +306,7 @@ public final class RedditAPI {
 										 final RedditAccount user,
 										 final CacheRequest.DownloadType downloadType,
 										 final boolean cancelExisting,
+										 final String after,
 										 final Context context) {
 		final URI uri;
 		if(user.isAnonymous()) {

@@ -19,15 +19,18 @@ package org.quantumbadger.redreader.activities;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import org.holoeverywhere.app.Activity;
+import org.quantumbadger.redreader.account.RedditAccountManager;
 import org.quantumbadger.redreader.common.General;
+import org.quantumbadger.redreader.reddit.api.RedditSubredditSubscriptionManager;
 import org.quantumbadger.redreader.settings.RRPrefs;
 import org.quantumbadger.redreader.ui.frag.RRFragmentLayout;
 import org.quantumbadger.redreader.ui.frag.RRSequentialUriHandler;
 import org.quantumbadger.redreader.ui.frag.RRTestUriHandler;
 import org.quantumbadger.redreader.ui.settings.PrefsUriHandler;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements RedditSubredditSubscriptionManager.SubredditSubscriptionStateChangeListener {
 
 	private RRFragmentLayout layout;
 
@@ -54,6 +57,20 @@ public class MainActivity extends Activity {
 		//layout.handleUri(Constants.Internal.getUri(Constants.Internal.URI_HOST_PREFSPAGE));
 		layout.handleUri(Uri.parse("rr://listtest"));
 		//layout.handleUri(Uri.parse("rr://touchtest"));
+
+		final RedditSubredditSubscriptionManager subscriptionManager
+				= RedditSubredditSubscriptionManager.getSingleton(this, RedditAccountManager.getInstance(this).getDefaultAccount());
+
+		Log.i("SUBSCR", String.format("Starting."));
+
+		subscriptionManager.addListener(this);
+
+		if(subscriptionManager.areSubscriptionsReady()) {
+			Log.i("SUBSCR READY", "Ready!");
+			for(String s : subscriptionManager.getSubscriptionList()) {
+				Log.i("SUBSCR READY", String.format("Subscribed to %s", s));
+			}
+		}
 	}
 
 	@Override
@@ -79,5 +96,23 @@ public class MainActivity extends Activity {
 	protected void onPause() {
 		super.onPause();
 		layout.onPause();
+	}
+
+	@Override
+	public void onSubredditSubscriptionListUpdated(RedditSubredditSubscriptionManager subredditSubscriptionManager) {
+		Log.i("SUBSCR UPDATE", "Update!");
+		for(String s : subredditSubscriptionManager.getSubscriptionList()) {
+			//Log.i("SUBSCR UPDATE", String.format("Subscribed to %s", s));
+		}
+	}
+
+	@Override
+	public void onSubredditSubscriptionAttempted(RedditSubredditSubscriptionManager subredditSubscriptionManager) {
+
+	}
+
+	@Override
+	public void onSubredditUnsubscriptionAttempted(RedditSubredditSubscriptionManager subredditSubscriptionManager) {
+
 	}
 }

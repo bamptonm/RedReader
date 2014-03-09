@@ -23,7 +23,7 @@ import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.widget.LinearLayout;
 import org.quantumbadger.redreader.R;
 import org.quantumbadger.redreader.common.RRTime;
-import org.quantumbadger.redreader.reddit.things.RawRedditComment;
+import org.quantumbadger.redreader.reddit.things.raw.RawRedditComment;
 
 public final class CommentPropertiesDialog extends PropertiesDialog {
 

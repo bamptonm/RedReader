@@ -28,7 +28,7 @@ import android.widget.BaseAdapter;
 import org.quantumbadger.redreader.R;
 import org.quantumbadger.redreader.account.RedditAccount;
 import org.quantumbadger.redreader.fragments.MainMenuFragment;
-import org.quantumbadger.redreader.reddit.things.RawRedditSubreddit;
+import org.quantumbadger.redreader.reddit.things.raw.RawRedditSubreddit;
 import org.quantumbadger.redreader.views.list.ListItemView;
 import org.quantumbadger.redreader.views.list.ListSectionHeaderView;
 import org.quantumbadger.redreader.views.list.MenuItem;

@@ -4,9 +4,10 @@ import org.quantumbadger.redreader.common.TimestampBound;
 import org.quantumbadger.redreader.common.TriggerableThread;
 import org.quantumbadger.redreader.common.collections.UniqueSynchronizedQueue;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Iterator;
 
 public class ThreadedRawObjectDB<K, V extends WritableObject<K>, F>
 		implements CacheDataSource<K, V, F> {
@@ -37,10 +38,10 @@ public class ThreadedRawObjectDB<K, V extends WritableObject<K>, F>
 	private void doWrite() {
 		synchronized(ioLock) {
 
-			final Collection<V> values;
+			final ArrayList<V> values;
 
 			synchronized(toWrite) {
-				values = toWrite.values();
+				values = new ArrayList<V>(toWrite.values());
 				toWrite.clear();
 			}
 
@@ -105,43 +106,49 @@ public class ThreadedRawObjectDB<K, V extends WritableObject<K>, F>
 
 		public void run() {
 
-			final HashSet<K> keysRemaining = new HashSet<K>(keys);
 			final HashMap<K, V> existingResult = new HashMap<K, V>(keys.size());
 			long oldestTimestamp = Long.MAX_VALUE;
 
 			synchronized(toWrite) {
-				for(final K key : keys) {
+
+				final Iterator<K> iter = keys.iterator();
+
+				while(iter.hasNext()) {
+					final K key = iter.next();
 					final V writeCacheResult = toWrite.get(key);
 					if(writeCacheResult != null && timestampBound.verifyTimestamp(writeCacheResult.getTimestamp())) {
-						keysRemaining.remove(key);
+						iter.remove();
 						existingResult.put(key, writeCacheResult);
 						oldestTimestamp = Math.min(oldestTimestamp, writeCacheResult.getTimestamp());
 					}
 				}
 			}
 
-			if(keysRemaining.size() == 0) {
+			if(keys.size() == 0) {
 				responseHandler.onRequestSuccess(existingResult, oldestTimestamp);
 				return;
 			}
 
-			for(final K key : keys) {
+			final Iterator<K> iter = keys.iterator();
+
+			while(iter.hasNext()) {
+				final K key = iter.next();
 				final V dbResult = db.getById(key);
 				if(dbResult != null && timestampBound.verifyTimestamp(dbResult.getTimestamp())) {
-					keysRemaining.remove(key);
+					iter.remove();
 					existingResult.put(key, dbResult);
 					oldestTimestamp = Math.min(oldestTimestamp, dbResult.getTimestamp());
 				}
 			}
 
-			if(keysRemaining.size() == 0) {
+			if(keys.size() == 0) {
 				responseHandler.onRequestSuccess(existingResult, oldestTimestamp);
 				return;
 			}
 
 			final long outerOldestTimestamp = oldestTimestamp;
 
-			alternateSource.performRequest(keysRemaining, timestampBound, new RequestResponseHandler<HashMap<K, V>, F>() {
+			alternateSource.performRequest(keys, timestampBound, new RequestResponseHandler<HashMap<K, V>, F>() {
 				public void onRequestFailed(F failureReason) {
 					responseHandler.onRequestFailed(failureReason);
 				}

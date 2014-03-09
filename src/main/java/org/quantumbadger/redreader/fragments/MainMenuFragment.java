@@ -42,7 +42,7 @@ import org.quantumbadger.redreader.common.General;
 import org.quantumbadger.redreader.common.RRError;
 import org.quantumbadger.redreader.reddit.APIResponseHandler;
 import org.quantumbadger.redreader.reddit.RedditAPI;
-import org.quantumbadger.redreader.reddit.things.RawRedditSubreddit;
+import org.quantumbadger.redreader.reddit.things.raw.RawRedditSubreddit;
 import org.quantumbadger.redreader.views.liststatus.ErrorView;
 import org.quantumbadger.redreader.views.liststatus.LoadingView;
 
@@ -147,7 +147,7 @@ public class MainMenuFragment extends Fragment implements MainMenuSelectionListe
 							RedditAPI.getUserSubreddits(CacheManager.getInstance(context),
 									accessibleSubredditResponseHandler.get(), RedditAccountManager.getAnon(),
 									force ? CacheRequest.DownloadType.FORCE : CacheRequest.DownloadType.IF_NECESSARY,
-									force, context);
+									force, null, context);
 						}
 					});
 
@@ -194,7 +194,7 @@ public class MainMenuFragment extends Fragment implements MainMenuSelectionListe
 		accessibleSubredditResponseHandler.set(responseHandler);
 
 		RedditAPI.getUserSubreddits(CacheManager.getInstance(context), responseHandler, user,
-				force ? CacheRequest.DownloadType.FORCE : CacheRequest.DownloadType.IF_NECESSARY, force, context);
+				force ? CacheRequest.DownloadType.FORCE : CacheRequest.DownloadType.IF_NECESSARY, force, null, context);
 
 		outer.addView(lv);
 		lv.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;

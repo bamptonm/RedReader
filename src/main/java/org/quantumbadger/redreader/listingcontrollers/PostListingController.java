@@ -19,7 +19,7 @@ package org.quantumbadger.redreader.listingcontrollers;
 
 import org.quantumbadger.redreader.cache.CacheRequest;
 import org.quantumbadger.redreader.fragments.PostListingFragment;
-import org.quantumbadger.redreader.reddit.things.RawRedditSubreddit;
+import org.quantumbadger.redreader.reddit.things.raw.RawRedditSubreddit;
 
 import java.net.URI;
 import java.util.UUID;
