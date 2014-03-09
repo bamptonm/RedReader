@@ -1,5 +1,8 @@
 package org.quantumbadger.redreader.io;
 
+import org.quantumbadger.redreader.common.UnexpectedInternalStateException;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -20,25 +23,38 @@ public class WritableHashSet implements WritableObject<String> {
 		serialised = listToEscapedString(hashSet);
 	}
 
+	private WritableHashSet(String serializedData, long timestamp, String key) {
+		this.timestamp = timestamp;
+		this.key = key;
+		serialised = serializedData;
+	}
+
 	public WritableHashSet(CreationData creationData) {
 		this.timestamp = creationData.timestamp;
 		this.key = creationData.key;
 	}
 
-	public WritableHashSet(String data) {
-		serialised = data;
-		key = null;
-		timestamp = -1;
-	}
-
 	@Override
 	public String toString() {
-		return serialised;
+		throw new UnexpectedInternalStateException("Using toString() is the wrong way to serialise a WritableHashSet");
+	}
+
+	public String serializeWithMetadata() {
+		final ArrayList<String> result = new ArrayList<String>(3);
+		result.add(serialised);
+		result.add(String.valueOf(timestamp));
+		result.add(key);
+		return listToEscapedString(result);
+	}
+
+	public static WritableHashSet unserializeWithMetadata(String raw) {
+		final ArrayList<String> data = escapedStringToList(raw);
+		return new WritableHashSet(data.get(0), Long.valueOf(data.get(1)), data.get(2));
 	}
 
 	public synchronized HashSet<String> toHashset() {
 		if(hashSet != null) return hashSet;
-		return (hashSet = escapedStringToSet(serialised));
+		return (hashSet = new HashSet<String>(escapedStringToList(serialised)));
 	}
 
 	public String getKey() {
@@ -80,9 +96,9 @@ public class WritableHashSet implements WritableObject<String> {
 		return sb.toString();
 	}
 
-	public static HashSet<String> escapedStringToSet(final String str) {
+	public static ArrayList<String> escapedStringToList(final String str) {
 
-		final HashSet<String> result = new HashSet<String>();
+		final ArrayList<String> result = new ArrayList<String>();
 
 		if(str != null) {
 

@@ -28,9 +28,6 @@ import org.quantumbadger.redreader.io.RequestResponseHandler;
 import org.quantumbadger.redreader.io.WritableHashSet;
 import org.quantumbadger.redreader.reddit.RedditSubredditManager;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -107,8 +104,6 @@ public class RedditSubredditSubscriptionManager {
 
 	private synchronized void onNewSubscriptionListReceived(HashSet<String> newSubscriptions, long timestamp) {
 
-		Log.i("SUBSCR INNER", String.format("onNewSubscriptionListReceived."));
-
 		pendingSubscriptions.clear();
 		pendingUnsubscriptions.clear();
 
@@ -117,18 +112,23 @@ public class RedditSubredditSubscriptionManager {
 		// TODO threaded? or already threaded due to cache manager
 		db.put(subscriptions);
 
-		Log.i("SUBSCR INNER", String.format("Mapping to %d listeners.", listeners.size()));
-
 		listeners.map(notifier, SubredditSubscriptionChangeType.LIST_UPDATED);
 	}
 
 	public synchronized ArrayList<String> getSubscriptionList() {
-		Log.i("SUBSCR INNER GET", "starting");
-		for(String s : subscriptions.toHashset()) Log.i("SUBSCR INNER GET", s);
 		return new ArrayList<String>(subscriptions.toHashset());
 	}
 
 	public void triggerUpdate(final RequestResponseHandler<HashSet<String>, SubredditRequestFailure> handler, TimestampBound timestampBound) {
+
+		if(subscriptions != null && timestampBound.verifyTimestamp(subscriptions.getTimestamp())) {
+			Log.i("SUBSCR INNER", "update not needed");
+			return;
+		}
+
+		if(subscriptions != null) {
+			Log.i("SUBSCR INNER EXISTING TIME", String.format("%d", subscriptions.getTimestamp()));
+		}
 
 		Log.i("SUBSCR INNER", String.format("triggerUpdate."));
 
@@ -140,52 +140,13 @@ public class RedditSubredditSubscriptionManager {
 					// TODO handle failed requests properly -- retry? then notify listeners
 					@Override
 					public void onRequestFailed(SubredditRequestFailure failureReason) {
-						Log.i("SUBSCR INNER", String.format("onRequestFailed."));
-						failureReason.t.printStackTrace(new PrintWriter(new Writer() {
-
-							private final StringBuilder currentLine = new StringBuilder();
-
-							@Override
-							public void write(char[] buf, int offset, int count) throws IOException {
-
-								final int lineBreak = getLineBreak(buf, offset, count);
-
-								if(lineBreak < 0) {
-									currentLine.append(buf, offset, count);
-									return;
-								}
-
-								currentLine.append(buf, offset, lineBreak - offset);
-								Log.i("SUBSCR INNER EX", currentLine.toString());
-								currentLine.setLength(0);
-								write(buf, lineBreak + 1, count - (lineBreak - offset) - 1);
-							}
-
-							private int getLineBreak(char[] buf, int offset, int count) {
-								for(int i = 0; i < count; i++) {
-									if(buf[i + offset] == '\n') return i + offset;
-								}
-								return -1;
-							}
-
-							@Override
-							public void flush() throws IOException {
-
-							}
-
-							@Override
-							public void close() throws IOException {
-
-							}
-						}));
+						failureReason.t.printStackTrace();
 						if(handler != null) handler.onRequestFailed(failureReason);
 					}
 
 					@Override
 					public void onRequestSuccess(WritableHashSet result, long timeCached) {
-						Log.i("SUBSCR INNER", String.format("onRequestSuccess."));
 						final HashSet<String> newSubscriptions = result.toHashset();
-						for(String s : newSubscriptions) Log.i("SUBSCR INNER RES", s);
 						onNewSubscriptionListReceived(newSubscriptions, timeCached);
 						if(handler != null) handler.onRequestSuccess(newSubscriptions, timeCached);
 					}
@@ -210,8 +171,8 @@ public class RedditSubredditSubscriptionManager {
 		onUnsubscriptionAttempt(subredditCanonicalId);
 	}
 
-	public void getSubscriptionListAge() {
-		// TODO
+	public Long getSubscriptionListTimestamp() {
+		return subscriptions != null ? subscriptions.getTimestamp() : null;
 	}
 
 	public interface SubredditSubscriptionStateChangeListener {

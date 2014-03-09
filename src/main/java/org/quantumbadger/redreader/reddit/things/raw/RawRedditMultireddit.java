@@ -32,15 +32,16 @@ public class RawRedditMultireddit implements WritableObject<RawRedditMultireddit
 	}
 
 	@WritableObjectVersion public static int DB_VERSION = 1;
-
 	@WritableObjectTimestamp public long downloadTime;
-	public long created, created_utc;
-	public String name, visibility, path;
-	public boolean can_edit;
 
-	public String multiredditUser, multiredditName;
+	@WritableField public long created, created_utc;
+	@WritableField public String name, visibility, path;
+	@WritableField public boolean can_edit;
 
-	public WritableHashSet subreddits;
+	@WritableField public String multiredditUser, multiredditName;
+
+	// TODO preserve timestamp and id!!!
+	@WritableField public WritableHashSet subreddits;
 
 	public static class MultiredditId {
 		public final String user, multiredditName;

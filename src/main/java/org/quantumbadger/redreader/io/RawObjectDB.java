@@ -212,7 +212,6 @@ public class RawObjectDB<K, E extends WritableObject<K>> extends SQLiteOpenHelpe
 			if(fieldType == String.class) {
 				field.set(obj, cursor.isNull(i) ? null : cursor.getString(i));
 
-				// TODO null?!
 			} else if(fieldType == Integer.class) {
 				field.set(obj, cursor.isNull(i) ? null : cursor.getInt(i));
 
@@ -232,7 +231,7 @@ public class RawObjectDB<K, E extends WritableObject<K>> extends SQLiteOpenHelpe
 				field.setBoolean(obj, cursor.getInt(i) != 0);
 
 			} else if(fieldType == WritableHashSet.class) {
-				field.set(obj, cursor.isNull(i) ? null : new WritableHashSet(cursor.getString(i)));
+				field.set(obj, cursor.isNull(i) ? null : WritableHashSet.unserializeWithMetadata(cursor.getString(i)));
 
 			} else {
 				throw new UnexpectedInternalStateException("Invalid readFromCursor field type "
@@ -308,7 +307,7 @@ public class RawObjectDB<K, E extends WritableObject<K>> extends SQLiteOpenHelpe
 				result.put(fieldNames[i], field.getBoolean(obj) ? 1 : 0);
 
 			} else if(fieldType == WritableHashSet.class) {
-				result.put(fieldNames[i], field.get(obj).toString());
+				result.put(fieldNames[i], ((WritableHashSet)field.get(obj)).serializeWithMetadata());
 
 			} else {
 				throw new UnexpectedInternalStateException();
